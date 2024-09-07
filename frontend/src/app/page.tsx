@@ -5,11 +5,9 @@ import { signup, login } from '@/app/actions/auth';
 
 export default function Home() {
   const formParams = {
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
-    role: ''
+    department: ''
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

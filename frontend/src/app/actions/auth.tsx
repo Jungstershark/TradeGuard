@@ -1,6 +1,5 @@
 'use client'
 import { EXECUTION_API_PREFIX } from '../constants';
-import { createSession } from '@/app/lib/session';
 
 export async function signup(formData: FormData) {
     // Validate form fields
@@ -46,7 +45,7 @@ export async function signup(formData: FormData) {
 export async function login(formData: FormData) {
     // Validate form fields
     const payload = {
-        "username": formData.get('username'),
+        "email": formData.get('username'),
         "password": formData.get('password'),
         "role": formData.get('role')
     };
@@ -71,12 +70,12 @@ export async function login(formData: FormData) {
             return { errors: errorData.errors || { general: 'Failed to sign in.' } };
         }
 
-        // Successful login response
         const data = await response.json();
+        const token = data.token; 
 
-        // Create session and redirect
-        // await createSession(payload.username, payload.role);
-        // redirect('/profile');
+        // 7 days expiration date
+        document.cookie = `token=${token}; Path=/; Secure; Max-Age=${7 * 24 * 60 * 60}`;
+        console.log("token stored in local storage");
 
         // Return success response
         return { success: true, data };
