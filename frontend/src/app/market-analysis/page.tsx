@@ -8,6 +8,7 @@ import {Button} from "@mui/material";
 import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_execution";
 import * as React from "react";
 import FunctionButton from "@/app/components/FunctionButton";
+import {instrumentMapping} from "@/app/utils/instrumentMapping";
 
 export const initialFilters = {
     "Instrument Group" : "",
@@ -32,6 +33,18 @@ export default function Page() {
         }
         setFilters(newFilters)
         console.log(newFilters)
+    }
+
+    const handleInstrumentChange = (e) => {
+        if (e.target.value in instrumentMapping) {
+            const newFilters = {
+                ...filters,
+                "Instrument": instrumentMapping[e.target.value]
+            }
+            setFilters(newFilters)
+        } else {
+            handleChange(e)
+        }
     }
 
     const handleCheckboxChange = (id) => {
@@ -124,7 +137,7 @@ export default function Page() {
 
                     return (
                         <li key={idx}>
-                            <TextSearch label={label} text={input} handleChange={handleChange}/>
+                            <TextSearch label={label} text={input} handleChange={(label === "Instrument") ? handleInstrumentChange : handleChange}/>
                         </li>
                     )
                 })}
