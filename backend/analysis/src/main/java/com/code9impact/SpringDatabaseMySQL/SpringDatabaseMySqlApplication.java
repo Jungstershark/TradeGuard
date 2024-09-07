@@ -1,13 +1,13 @@
-package com.code9impact.analysis;
+package com.code9impact.SpringDatabaseMySQL;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AnalysisApplication {
+public class SpringDatabaseMySqlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AnalysisApplication.class, args);
+		SpringApplication.run(SpringDatabaseMySqlApplication.class, args);
 	}
 
 }
