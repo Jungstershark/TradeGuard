@@ -1,9 +1,6 @@
 package com.code9impact.SpringDatabaseMySQL.domains;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,30 +11,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="ApprovedInstruments")
+@Table(name = "approved_instruments")
 public class Instrument {
     @Id
-    private Integer instrumentId;
+    @GeneratedValue
+    private String instrumentId;
 
-    @Column(name = "InstrumentGroup")
+    @Column(name = "instrument_group")
     private String instrumentGroup;
 
-    @Column(name = "Instrument")
+    @Column(name = "instrument")
     private String instrument;
 
-    @Column(name = "Department")
+    @Column(name = "department")
     private String department;
 
-    @Column(name = "RiskCountry")
+    @Column(name = "risk_country")
     private String riskCountry;
 
-    @Column(name = "Exchange")
+    @Column(name = "exchange")
     private String exchange;
 
-    @Column(name = "TradeCCY")
+    @Column(name = "tradeccy")
     private String tradeCCY;
 
-    @Column(name = "SettlementCCY")
+    @Column(name = "settlementccy")
     private String exchangeCCY;
 
 
