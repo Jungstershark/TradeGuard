@@ -14,9 +14,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type formAction = (id: Number) => void;
 export default function SelectedInstrumentsTable(
-    { rows, handleCheckboxChange, totalCount, limitOrders, sellStates, setTotalCount, setLimitOrders, setSellStates }:
+    { rows, totalCount, limitOrders, sellStates, setTotalCount, setLimitOrders, setSellStates }:
         {
-            rows: InstrumentData[], handleCheckboxChange: formAction, totalCount: number, limitOrders: { [key: number]: string }, sellStates: { [key: number]: boolean },
+            rows: InstrumentData[], totalCount: number, limitOrders: { [key: number]: string }, sellStates: { [key: number]: boolean },
             setTotalCount: React.Dispatch<React.SetStateAction<number>>, setLimitOrders: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>, setSellStates: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>
         }) {
 
@@ -39,9 +39,9 @@ export default function SelectedInstrumentsTable(
                 return acc + (isNaN(num) ? 0 : num);  // Handle invalid numbers (NaN)
             }, 0);
 
-            setTotalCount(total);  // Set total count to the sum of all limit orders
+            setTotalCount(total);  
 
-            return updatedOrders;  // Return the updated limitOrders state
+            return updatedOrders;  
         });
     };
 

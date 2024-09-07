@@ -54,7 +54,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <div className="text-lg py-3">
                     Instruments to Trade
                 </div>
-                <SelectedInstrumentsTable rows={testInstrumentsData} handleCheckboxChange={() => { }} totalCount={totalCount} setTotalCount={setTotalCount} sellStates={sellStates} setSellStates={setSellStates} limitOrders={limitOrders} setLimitOrders={setLimitOrders} />
+                <SelectedInstrumentsTable rows={testInstrumentsData} totalCount={totalCount} setTotalCount={setTotalCount} sellStates={sellStates} setSellStates={setSellStates} limitOrders={limitOrders} setLimitOrders={setLimitOrders} />
             </div>
 
             <div className="w-full flex justify-end flex-row items-center">
