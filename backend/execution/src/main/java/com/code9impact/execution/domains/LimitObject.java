@@ -4,11 +4,16 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "AvailableLimits")  // This tells JPA to use the 'AvailableLimits' table
+@Table(name = "available_limits")  // This tells JPA to use the 'AvailableLimits' table
 public class LimitObject {
 
     @Id
@@ -25,69 +30,9 @@ public class LimitObject {
     private String currency;
 
     @Column(name = "available_limit")  // Explicitly map to the database column name
-    private long availableLimit;
+    private Long availableLimit;
 
     @Column(name = "data_date")  // Explicitly map to the database column name
     private LocalDate dataDate;
 
-    public LimitObject(String id, String instrumentGroup, String counterparty, String currency, long availableLimit, LocalDate dataDate) {
-        this.id = id;
-        this.instrumentGroup = instrumentGroup;
-        this.counterparty = counterparty;
-        this.currency = currency;
-        this.availableLimit = availableLimit;
-        this.dataDate = dataDate;
-    }
-
-    public LimitObject() {
-
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getInstrumentGroup() {
-        return instrumentGroup;
-    }
-
-    public void setInstrumentGroup(String instrumentGroup) {
-        this.instrumentGroup = instrumentGroup;
-    }
-
-    public String getCounterparty() {
-        return counterparty;
-    }
-
-    public void setCounterparty(String counterparty) {
-        this.counterparty = counterparty;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public long getAvailableLimit() {
-        return availableLimit;
-    }
-
-    public void setAvailableLimit(long availableLimit) {
-        this.availableLimit = availableLimit;
-    }
-
-    public LocalDate getDataDate() {
-        return dataDate;
-    }
-
-    public void setDataDate(LocalDate dataDate) {
-        this.dataDate = dataDate;
-    }
 }

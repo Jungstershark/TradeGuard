@@ -1,5 +1,5 @@
 -- Create table for AvailableLimits
-CREATE TABLE IF NOT EXISTS AvailableLimits (
+CREATE TABLE IF NOT EXISTS available_limits (
     id CHAR(16) PRIMARY KEY,
     instrument_group VARCHAR(100),
     counterparty VARCHAR(255),
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS AvailableLimits (
 
 -- Load data from AvailableLimits.csv
 LOAD DATA INFILE '/docker-entrypoint-initdb.d/assets/AvailableLimits.csv'
-INTO TABLE AvailableLimits
+INTO TABLE available_limits
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
