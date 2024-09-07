@@ -1,11 +1,20 @@
+import LimitTable from "./components/LimitTable";
+import dummyData from "../utils/test";
 export default function Page() {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <div className="z-10 w-full flex flex-col max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          
-          <text className=" pt-5 text-2xl md:text-4xl text-center font-semibold">page2</text>
-         
-          
+      <main className="flex min-h-screen w-full flex-col items-center p-10 bg-green-100">
+        <div className = "flex flex-row justify-around w-full h-1/6 bg-red-100">
+            <div className = "bg-blue-100">
+                instrument group search
+            </div>
+            <div className = "bg-blue-100">
+                counterparty search
+            </div>
+        </div>
+        <div className = "flex flex-row justify-around w-full h-4/6 bg-red-100 mt-10">
+            <div className = "bg-blue-100">
+                <LimitTable rows = {dummyData} />
+            </div>
         </div>
       </main>
     );
