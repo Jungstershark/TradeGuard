@@ -8,6 +8,7 @@ import {Button} from "@mui/material";
 import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_execution";
 import * as React from "react";
 import FunctionButton from "@/app/components/FunctionButton";
+import {instrumentMapping} from "@/app/utils/instrumentMapping";
 
 export const initialFilters = {
     "Instrument Group" : "",
@@ -32,6 +33,18 @@ export default function Page() {
         }
         setFilters(newFilters)
         console.log(newFilters)
+    }
+
+    const handleInstrumentChange = (e) => {
+        if (e.target.value in instrumentMapping) {
+            const newFilters = {
+                ...filters,
+                "Instrument": instrumentMapping[e.target.value]
+            }
+            setFilters(newFilters)
+        } else {
+            handleChange(e)
+        }
     }
 
     const handleCheckboxChange = (id) => {
@@ -72,7 +85,15 @@ export default function Page() {
 
     const router = useRouter();
     const goToTradeExecution = () => {
-        router.push("/trade-execution/" + JSON.stringify(selectedInstrumentIdList) )
+        const numUniqueInstrumentGroup = new Set(instrumentDataList
+            .filter(instrumentData => selectedInstrumentIdList.includes(instrumentData["instrumentId"]))
+            .map(instrumentData => instrumentData["instrumentGroup"])).size
+
+        if (numUniqueInstrumentGroup !== 1) {
+            alert("Choose Instruments from only one Instrument Group")
+        } else {
+            router.push("/trade-execution/" + JSON.stringify(selectedInstrumentIdList))
+        }
     }
 
     const goToApprovalForm = () => {
@@ -116,7 +137,7 @@ export default function Page() {
 
                     return (
                         <li key={idx}>
-                            <TextSearch label={label} text={input} handleChange={handleChange}/>
+                            <TextSearch label={label} text={input} handleChange={(label === "Instrument") ? handleInstrumentChange : handleChange}/>
                         </li>
                     )
                 })}
@@ -137,7 +158,8 @@ export default function Page() {
                     onClick={goToApprovalForm}>
                     Approval Form
                 </button>
-                {selectedInstrumentIdList.length > 0 ? <button
+                {selectedInstrumentIdList.length > 0
+                    ? <button
                         className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
                         onClick={goToTradeExecution}>
                         Trade Execution
