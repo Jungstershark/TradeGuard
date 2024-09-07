@@ -1,13 +1,13 @@
 'use client'
 
 import {useEffect, useState} from 'react'
+import { useRouter } from 'next/navigation';
 import TextSearch from "@/app/components/TextSearch";
 import InstrumentTable, { testData } from "@/app/market-analysis/components/InstrumentTable";
 import {Button} from "@mui/material";
-import NavButton from "@/app/components/Button"
 import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_execution";
-import {ButtonPurpose} from "@/app/utils/ButtonPurpose";
 import * as React from "react";
+import FunctionButton from "@/app/components/FunctionButton";
 
 const initialFilters = {
     "Instrument Group" : "",
@@ -70,6 +70,11 @@ export default function Page() {
         }
     }
 
+    const router = useRouter();
+    const goToTradeExecution = () => {
+        router.push("/trade-execution/" + JSON.stringify(selectedInstrumentIdList) )
+    }
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -115,13 +120,25 @@ export default function Page() {
             <Button onClick={onSearchClick}>
                 Search
             </Button>
-            <div style={{height: 250}} className="flex mt-10 h-80 border border-gray-300 rounded">
+            <div style={{ height: 240, marginBottom: "20px" }} className="flex mt-10 h-80 border border-gray-300 rounded">
                 <InstrumentTable
                     instrumentDataList={instrumentDataList}
                     selectedInstrumentIdList={selectedInstrumentIdList}
                     handleCheckboxChange={handleCheckboxChange}
                 />
             </div>
+            <div className="flex flex-row-reverse">
+                {selectedInstrumentIdList.length > 0 ? <button
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                        onClick={goToTradeExecution}>
+                        Trade Execution
+                    </button> :
+                    <div
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] opacity-50 text-white`}>
+                        Trade Execution
+                    </div>
+                }
+            </div>
         </div>
-    )
+    );
 }
