@@ -10,12 +10,16 @@ import Paper from '@mui/material/Paper';
 import Button from '@/app/components/Button';
 import TablePagination from '@mui/material/TablePagination';
 import { ButtonPurpose } from '@/app/utils/ButtonPurpose';
+import { submitTrade } from '@/app/actions/limit_execution';
+import { useRouter } from 'next/navigation';
+import FunctionButton from '@/app/components/FunctionButton';
 
 interface LimitTableProps {
     rows: LimitData[];
 }
 
-export default function LimitTable({ rows }: LimitTableProps) {
+export default function LimitTable({ rows, totalLimitCount }: { rows: LimitData[], totalLimitCount: number }) {
+    const router = useRouter();
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [page, setPage] = React.useState(0);
 
@@ -28,17 +32,33 @@ export default function LimitTable({ rows }: LimitTableProps) {
         setPage(0);
     };
 
+    const handleSubmit = async (event: React.FormEvent, id: number) => {
+        try {
+            const result = await submitTrade(totalLimitCount, String(id));  // Pass FormData to onSubmit
+            console.log(result);
+            if (result.errors) {
+                console.error("Error during form submission:", result.errors);  // Handle errors
+            } else if (result.success) {
+                console.log("Trade submitted successfully");
+                alert("Trade submitted successfully");
+                router.push('/market-analysis');
+            }
+        } catch (error) {
+            console.error("Error during form submission:", error);
+            alert("Trade Unsuccessful");
+        }
+    };
 
-    // Ensure that we're not mutating the original rows array
+
     const visibleRows = React.useMemo(() => {
-        return [...rows] // Create a shallow copy to prevent mutation
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage); // Paginate the rows
+        return [...rows] // Copy the rows array
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     }, [rows, page, rowsPerPage]);
 
     const emptyRows = Math.max(0, (1 + page) * rowsPerPage - rows.length);
 
     return (
-        <Paper>
+        <Paper className="w-full h-full">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -67,7 +87,12 @@ export default function LimitTable({ rows }: LimitTableProps) {
                                 <TableCell align="center">{row.AvailableLimit}</TableCell>
                                 <TableCell align="center">{row.DataDate}</TableCell>
                                 <TableCell align="center">
-                                    <Button text="trade" link={`/execution-form/${row.ID}`} purpose={ButtonPurpose.Ready} />
+                                    <FunctionButton text="Trade"formAction={handleSubmit} formActionProps={row.ID} />
+                                    {/* <div
+                                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white`}
+                                        onClick={(e) => handleSubmit(e, row.ID)}>
+                                        Trade
+                                    </div> */}
                                 </TableCell>
                             </TableRow>
                         ))}
