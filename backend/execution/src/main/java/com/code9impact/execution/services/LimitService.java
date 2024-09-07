@@ -15,4 +15,11 @@ public interface LimitService {
     List<LimitObject> getLimitsByInstrGrp(String s);
 
     List<LimitObject> getLimitsByAvailLimit(Long aLong);
+
+    // reduce the available limit
+    boolean updateAvailableLimit(String id, Long amount);
+
+    LimitObject createLimit(LimitObject limitObject);
+
+    boolean deleteLimitById(String id);
 }
