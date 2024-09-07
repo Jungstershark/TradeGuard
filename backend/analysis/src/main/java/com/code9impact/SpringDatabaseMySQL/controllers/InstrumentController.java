@@ -91,5 +91,12 @@ public ResponseEntity<Iterable<Instrument>> searchInstruments(@RequestBody Instr
         Instrument instrument = instrumentService.addInstrument(newInstrument);
         return new ResponseEntity<>(instrument, HttpStatus.CREATED);
     }
+
+    //get instrument by list of ids
+    @PostMapping(path = "/instruments/ids", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Iterable<Instrument>> getInstrumentsByIds(@RequestBody List<String> instrumentIds) {
+        Iterable<Instrument> instruments = instrumentService.findInstrumentsByMultipleIds(instrumentIds);
+        return new ResponseEntity<>(instruments, HttpStatus.OK);
+    }
 }
 

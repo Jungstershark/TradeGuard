@@ -16,4 +16,6 @@ public interface InstrumentService {
     Iterable<Instrument> findInstrumentsByInstrumentGroup(String instrumentGroup);
 
     Instrument addInstrument(Instrument newInstrument);
+
+    Iterable<Instrument> findInstrumentsByMultipleIds(List<String> ids);
 }

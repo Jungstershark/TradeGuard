@@ -42,5 +42,12 @@ public class InstrumentServiceImpl implements InstrumentService {
         return instrumentRepository.save(newInstrument);
     }
 
+    @Override
+    public Iterable<Instrument> findInstrumentsByMultipleIds(List<String> ids) {
+        return instrumentRepository.findByInstrumentIdIn(ids);
+    }
 
 }
+
+
+
