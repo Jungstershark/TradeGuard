@@ -7,7 +7,7 @@ export default function Page() {
     const [messages, setMessages] = useState<string[]>([]);
 
     useEffect(() => {
-        const eventSource = new EventSource('http://localhost:8087/api/v1/limits/stream')
+        const eventSource = new EventSource('http://localhost:8087/api/v1/limits/stream/')
         
         eventSource.onmessage = (event: MessageEvent) => {
             console.log("EventSource message: ", event.data);

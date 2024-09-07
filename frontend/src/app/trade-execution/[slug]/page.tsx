@@ -8,6 +8,7 @@ import { getLimitsWithFilter } from "@/app/actions/limit_execution";
 import { getInstrumentsById } from "@/app/actions/analysis_execution";
 import { json } from "stream/consumers";
 import { ButtonPurpose } from "@/app/utils/ButtonPurpose";
+import { timeStamp } from "console";
 
 export default function Page({ params }: { params: { slug: string } }) {
     if (!params) {
@@ -28,7 +29,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     // Fetch the selected instruments data
     useEffect(() => {
-        
+
         async function fetchSelectedInstruments() {
             try {
                 const data = await getInstrumentsById(instrumentIds); // Call the async function
@@ -56,28 +57,56 @@ export default function Page({ params }: { params: { slug: string } }) {
     }, []);
 
     // Fetch the limit data
+    // useEffect(() => {
+    //     async function fetchLimitsData() {
+    //         try {
+    //             const data = await getLimitsWithFilter(totalCount, instrumentGroup); // Call the async function
+
+    //             const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
+    //                 ID: item['id'],
+    //                 Counterparty: item['counterparty'],
+    //                 InstrumentGroup: item['instrumentGroup'],
+    //                 Currency: item['currency'],
+    //                 AvailableLimit: item['availableLimit'],
+    //                 DataDate: item['dataDate']
+    //             }));
+
+    //             setLimitData(rows); // Update the state with the response data
+    //             console.log(data);
+    //         } catch (error: any) {
+    //             console.log(error.message);
+    //         }
+    //     }
+
+    //     fetchLimitsData();
+    // }, [instrumentGroup, totalCount]);
+
     useEffect(() => {
-        async function fetchLimitsData() {
-            try {
-                const data = await getLimitsWithFilter(totalCount, instrumentGroup); // Call the async function
+        const eventSource = new EventSource(`http://localhost:8087/api/v1/limits/stream/filter?limithigher=${totalCount}&instrgrp=${instrumentGroup}`)
 
-                const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
-                    ID: item['id'],
-                    Counterparty: item['counterparty'],
-                    InstrumentGroup: item['instrumentGroup'],
-                    Currency: item['currency'],
-                    AvailableLimit: item['availableLimit'],
-                    DataDate: item['dataDate']
-                }));
+        eventSource.onmessage = (event: MessageEvent) => {
+            console.log("total count: ", totalCount);
+            const parsedData = JSON.parse(event.data);
+            const rows: LimitData[] = parsedData.map((item: { [x: string]: any; }) => ({
+                ID: item['id'],
+                Counterparty: item['counterparty'],
+                InstrumentGroup: item['instrumentGroup'],
+                Currency: item['currency'],
+                AvailableLimit: item['availableLimit'],
+                DataDate: item['dataDate']
+            }));
+            setLimitData(rows);
+            console.log("queried");
+        };
 
-                setLimitData(rows); // Update the state with the response data
-                console.log(data);
-            } catch (error: any) {
-                console.log(error.message);
-            }
-        }
+        eventSource.onerror = (error: Event) => {
+            console.error("EventSource failed: ", error);
+            eventSource.close();
+        };
 
-        fetchLimitsData();
+        return () => {
+            eventSource.close();
+        };
     }, [instrumentGroup, totalCount]);
 
     return (

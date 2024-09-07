@@ -41,7 +41,7 @@ export default function LimitTable({ rows, totalLimitCount }: { rows: LimitData[
             } else if (result.success) {
                 console.log("Trade submitted successfully");
                 alert("Trade submitted successfully");
-                router.push('/market-analysis');
+                // router.push('/market-analysis');
             }
         } catch (error) {
             console.error("Error during form submission:", error);
