@@ -7,7 +7,4 @@ interface InstrumentData {
     "Exchange": string;
     "TradeCCY": string;
     "SettlementCCY": string;
-    "IsSelected": boolean;
-    "IsBuy": boolean;
-    "Volume": number;
 }
