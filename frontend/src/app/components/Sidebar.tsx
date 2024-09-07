@@ -22,19 +22,19 @@ export default function Sidebar() {
                 </Link>
                 <Link
                     href="/page1"
-                    className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/page1" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
+                    className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/market-analysis" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
                 >
-                    {pathname === "/page1" && <AiFillFolder style={{ fontSize: '24px' }} />}
-                    {pathname !== "/page1" && <AiOutlineFolder style={{ fontSize: '24px' }} />}
-                    <text className="pl-2">Page 1</text>
+                    {pathname === "/market-analysis" && <AiFillFolder style={{ fontSize: '24px' }} />}
+                    {pathname !== "/market-analysis" && <AiOutlineFolder style={{ fontSize: '24px' }} />}
+                    <text className="pl-2">Market Analysis</text>
                 </Link>
                 <Link
                     href="/page2"
-                    className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/page2" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
+                    className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/trade-execution" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
                 >
-                    {pathname === "/page2" && <AiFillCloud style={{ fontSize: '24px' }} />}
-                    {pathname !== "/page2" && <AiOutlineCloud style={{ fontSize: '24px' }} />}
-                    <text className="pl-2">Page 2</text>
+                    {pathname === "/trade-execution" && <AiFillCloud style={{ fontSize: '24px' }} />}
+                    {pathname !== "/trade-execution" && <AiOutlineCloud style={{ fontSize: '24px' }} />}
+                    <text className="pl-2">Execution</text>
                 </Link>
             </nav>
         </div>
