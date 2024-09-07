@@ -44,4 +44,24 @@ public interface InstrumentRepository extends JpaRepository<Instrument, String> 
 
     List<Instrument> findByInstrumentIdIn(List<String> instrumentIds);
 
+    @Query("SELECT DISTINCT i.instrumentGroup FROM Instrument i")
+    List<String> findDistinctInstrumentGroup();
+
+    @Query("SELECT DISTINCT i.instrument FROM Instrument i")
+    List<String> findDistinctInstrument();
+
+    @Query("SELECT DISTINCT i.department FROM Instrument i")
+    List<String> findDistinctDepartment();
+
+    @Query("SELECT DISTINCT i.riskCountry FROM Instrument i")
+    List<String> findDistinctRiskCountry();
+
+    @Query("SELECT DISTINCT i.exchange FROM Instrument i")
+    List<String> findDistinctExchange();
+
+    @Query("SELECT DISTINCT i.tradeCCY FROM Instrument i")
+    List<String> findDistinctTradeCCY();
+
+    @Query("SELECT DISTINCT i.settlementCCY FROM Instrument i")
+    List<String> findDistinctSettlementCCY();
 }
