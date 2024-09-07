@@ -121,6 +121,9 @@ public class LimitController {
 
             // Return the created object along with the HTTP 201 Created status
             return new ResponseEntity<>(savedLimit, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            // Handle duplicate limit error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             // Handle unexpected errors
             return new ResponseEntity<>("An error occurred while creating the limit object", HttpStatus.INTERNAL_SERVER_ERROR);
