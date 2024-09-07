@@ -9,7 +9,7 @@ import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_
 import * as React from "react";
 import FunctionButton from "@/app/components/FunctionButton";
 
-const initialFilters = {
+export const initialFilters = {
     "Instrument Group" : "",
     "Instrument" : "",
     "Department" : "",
