@@ -1,6 +1,7 @@
 package com.code9impact.execution.controllers;
 
 import com.code9impact.execution.domains.LimitObject;
+import com.code9impact.execution.domains.UpdateLimitRequest;
 import com.code9impact.execution.services.LimitService;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,76 @@ public class LimitController {
         return new ResponseEntity<>((List<LimitObject>) limitService.getAllLimits(), HttpStatus.OK);
     }
 
+    @PutMapping(path = "/limits/update")
+    public ResponseEntity<String> updateAvailableLimit(@RequestBody UpdateLimitRequest request) {
+        Optional<LimitObject> limitObject = limitService.getLimitBy(request.getId());
+
+        if (limitObject.isPresent()) {
+            LimitObject limit = limitObject.get();
+
+            // Check if the amount to be subtracted is greater than the current available limit
+            if (request.getAmount() > limit.getAvailableLimit()) {
+                return new ResponseEntity<>("The requested amount exceeds the available limit.", HttpStatus.BAD_REQUEST);
+            }
+
+            // Subtract the amount and update the limit
+            boolean isUpdated = limitService.updateAvailableLimit(request.getId(), request.getAmount());
+
+            if (isUpdated) {
+                return new ResponseEntity<>("Limit updated successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to update the limit", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            // Return 404 if the id is not found
+            return new ResponseEntity<>("Limit with the provided id not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(path = "/limits")
+    public ResponseEntity<Object> createLimit(@RequestBody LimitObject limitObject) {
+        // Validate the input data
+        if (limitObject.getInstrumentGroup() == null || limitObject.getInstrumentGroup().isEmpty()) {
+            return new ResponseEntity<>("Instrument Group is required", HttpStatus.BAD_REQUEST);
+        }
+
+        if (limitObject.getCounterparty() == null || limitObject.getCounterparty().isEmpty()) {
+            return new ResponseEntity<>("Counterparty is required", HttpStatus.BAD_REQUEST);
+        }
+
+        if (limitObject.getCurrency() == null || limitObject.getCurrency().length() != 3) {
+            return new ResponseEntity<>("Valid currency code (3 characters) is required", HttpStatus.BAD_REQUEST);
+        }
+
+        if (limitObject.getAvailableLimit() == null || limitObject.getAvailableLimit() < 0) {
+            return new ResponseEntity<>("Available limit must be a positive number", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            // Call the service to save the limit object
+            LimitObject savedLimit = limitService.createLimit(limitObject);
+
+            // Return the created object along with the HTTP 201 Created status
+            return new ResponseEntity<>(savedLimit, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Handle unexpected errors
+            return new ResponseEntity<>("An error occurred while creating the limit object", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // DELETE endpoint to delete a limit based on id
+    @DeleteMapping(path = "/limits/{id}")
+    public ResponseEntity<String> deleteLimit(@PathVariable String id) {
+        boolean isDeleted = limitService.deleteLimitById(id);
+
+        if (isDeleted) {
+            return new ResponseEntity<>("Limit deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Limit with provided id not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 //    submit trade order form
 //            Realtime data
 //                    instrument group, limit higher than amount given
@@ -78,7 +149,7 @@ public class LimitController {
     public SseEmitter streamEvents() {
         SseEmitter emitter = new SseEmitter(0L);
         ExecutorService sseExecutor = Executors.newSingleThreadExecutor();
-        
+
         sseExecutor.execute(() -> {
             try {
                 int keepAliveSeconds = 300;
@@ -91,7 +162,7 @@ public class LimitController {
                 emitter.completeWithError(e);
             }
         });
-        
+
         sseExecutor.shutdown();
         return emitter;
     }
