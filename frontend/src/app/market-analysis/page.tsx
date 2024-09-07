@@ -76,7 +76,7 @@ export default function Page() {
     }
 
     const goToApprovalForm = () => {
-        const data = JSON.stringify(filters)
+        router.push("/market-analysis/approval-form/" + JSON.stringify(filters) )
     }
 
     useEffect(() => {
