@@ -69,7 +69,21 @@ public class LimitServiceImpl implements LimitService {
 
     @Override
     public LimitObject createLimit(LimitObject limitObject) {
-        // Save the limit object to the repository, MySQL will generate the ID
+        // Check if a combination already exists
+        Optional<LimitObject> existingLimit = limitRepository.findByInstrumentGroupAndCounterpartyAndCurrencyAndAvailableLimit(
+                limitObject.getInstrumentGroup(),
+                limitObject.getCounterparty(),
+                limitObject.getCurrency(),
+                limitObject.getAvailableLimit()
+        );
+        System.out.println(existingLimit.isPresent());
+
+        // If the combination exists, throw an exception or return null (depending on your business logic)
+        if (existingLimit.isPresent()) {
+            throw new IllegalArgumentException("A limit with the same combination of InstrumentGroup, Counterparty, Currency, and AvailableLimit already exists.");
+        }
+
+        // If no such combination exists, save the new limit object
         return limitRepository.save(limitObject);
     }
 

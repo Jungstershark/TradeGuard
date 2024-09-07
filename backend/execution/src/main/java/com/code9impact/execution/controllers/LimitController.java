@@ -121,6 +121,9 @@ public class LimitController {
 
             // Return the created object along with the HTTP 201 Created status
             return new ResponseEntity<>(savedLimit, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            // Handle duplicate limit error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             // Handle unexpected errors
             return new ResponseEntity<>("An error occurred while creating the limit object", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -166,4 +169,50 @@ public class LimitController {
         sseExecutor.shutdown();
         return emitter;
     }
+
+    @GetMapping(path = "/limits/stream/filter")
+    @ResponseBody
+    public SseEmitter streamFilteredEvents(
+            @RequestParam(required = false) Optional<String> instrgrp,
+            @RequestParam(required = false) Optional<Long> limithigher) {
+
+        SseEmitter emitter = new SseEmitter(0L);
+        ExecutorService sseExecutor = Executors.newSingleThreadExecutor();
+
+        sseExecutor.execute(() -> {
+            try {
+                int keepAliveSeconds = 300;  // Stream for 300 seconds (5 minutes)
+                for (int i = 0; i < keepAliveSeconds; i++) {
+                    List<LimitObject> filteredLimits;
+
+                    // Apply filters based on request parameters
+                    if (instrgrp.isPresent() && limithigher.isPresent()) {
+                        filteredLimits = limitService.getLimitsInstrGrpAvailLimit(instrgrp.get(), limithigher.get());
+                    } else if (instrgrp.isPresent()) {
+                        filteredLimits = limitService.getLimitsByInstrGrp(instrgrp.get());
+                    } else if (limithigher.isPresent()) {
+                        filteredLimits = limitService.getLimitsByAvailLimit(limithigher.get());
+                    } else {
+                        filteredLimits = (List<LimitObject>) limitService.getAllLimits();
+                    }
+
+                    // Send the filtered data to the client
+                    emitter.send(filteredLimits);
+
+                    // Simulate 1-second delay between each update
+                    Thread.sleep(1000);
+                }
+
+                emitter.complete();  // Complete after the loop
+            } catch (IOException | InterruptedException e) {
+                emitter.completeWithError(e);  // Handle errors
+            }
+        });
+
+        sseExecutor.shutdown();
+        return emitter;
+    }
+
+
+
 }
