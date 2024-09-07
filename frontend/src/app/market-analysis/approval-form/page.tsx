@@ -2,7 +2,8 @@
 
 import React, {useEffect, useState} from 'react';
 import { initialFilters } from "@/app/market-analysis/page";
-import {getUniqueParams} from "@/app/actions/analysis_execution";
+import { getUniqueParams, postApprovalForm} from "@/app/actions/analysis_execution";
+import { useRouter } from 'next/navigation';
 
 const initialOptions = {
     "Instrument Group": [""],
@@ -38,12 +39,25 @@ export default function Page() {
     const [formParams, setFormParams] = useState(initialFilters)
     const [options, setOptions] = useState(initialOptions)
 
+    const router = useRouter()
+
     function onOptionSelected(e, param) {
 
         const newFormParams = {...formParams}
         newFormParams[param] = e.target.value
 
         setFormParams(newFormParams)
+    }
+
+    const onSubmitClick = async () => {
+        try {
+            postApprovalForm(formParams)
+        } catch (error: any) {
+            console.log(error.message);
+        }
+
+        alert("Approval Form Submitted")
+        router.push('/market-analysis')
     }
 
     useEffect(() => {
@@ -92,7 +106,7 @@ export default function Page() {
             <div className="flex flex-row-reverse mt-10">
                 { !Object.values(formParams).includes("") ? <button
                         className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
-                        // onClick={}
+                        onClick={onSubmitClick}
                     >
                         Submit for Approval
                     </button> :

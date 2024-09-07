@@ -1,6 +1,7 @@
 import {EXECUTION_API_PREFIX} from "@/app/constants";
 
 const ANALYSIS_API_PREFIX = 'http://localhost:8080/api/v1';
+const GATEWAY_API_PREFIX = 'http://localhost:8086/api/v1'
 
 export async function getAllInstruments() {
     // Validate form fields
@@ -152,13 +153,38 @@ export async function getInstrumentsById(id: string[]) {
 
 export async function postApprovalForm(formParams: {}) {
     try {
+        const payload = {};
 
-        const response = await fetch(`${ANALYSIS_API_PREFIX}/instruments/ids`, {
+        if (formParams["Instrument Group"]) {
+            payload["instrumentGroup"] = formParams["Instrument Group"];
+        }
+        if (formParams["Instrument"]) {
+            payload["instrument"] = formParams["Instrument"];
+        }
+        if (formParams["Department"]) {
+            payload["department"] = formParams["Department"];
+        }
+        if (formParams["Risk Country"]) {
+            payload["riskCountry"] = formParams["Risk Country"];
+        }
+        if (formParams["Exchange"]) {
+            payload["exchange"] = formParams["Exchange"];
+        }
+        if (formParams["Trade Currency"]) {
+            payload["tradeCCY"] = formParams["Trade Currency"];
+        }
+        if (formParams["Settlement Currency"]) {
+            payload["settlementCCY"] = formParams["Settlement Currency"];
+        }
+
+        console.log(payload)
+
+        const response = await fetch(`${GATEWAY_API_PREFIX}/records/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(id),
+            body: JSON.stringify(payload),
             mode: 'cors',
         });
 
