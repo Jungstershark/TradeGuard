@@ -4,7 +4,10 @@ import {useEffect, useState} from 'react'
 import TextSearch from "@/app/components/TextSearch";
 import InstrumentTable, { testData } from "@/app/market-analysis/components/InstrumentTable";
 import {Button} from "@mui/material";
-import { getAllInstruments } from "@/app/actions/analysis_execution";
+import NavButton from "@/app/components/Button"
+import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_execution";
+import {ButtonPurpose} from "@/app/utils/ButtonPurpose";
+import * as React from "react";
 
 const initialFilters = {
     "Instrument Group" : "",
@@ -19,7 +22,7 @@ const initialFilters = {
 export default function Page() {
     const [filters, setFilters] = useState(initialFilters)
 
-    const [instrumentDataList, setInstrumentDataList] = useState(testData)
+    const [instrumentDataList, setInstrumentDataList] = useState([])
     const [selectedInstrumentIdList, setSelectedInstrumentIdList] = useState([])
 
     const handleChange = (e) => {
@@ -32,14 +35,40 @@ export default function Page() {
     }
 
     const handleCheckboxChange = (id) => {
-        if (selectedInstrumentIdList.includes(id)) {
-            setSelectedInstrumentIdList([...selectedInstrumentIdList].filter(selectedId =>
-                selectedId !== id
-            ))
-        } else {
-            setSelectedInstrumentIdList([...selectedInstrumentIdList, id])
-        }
+        const newSelectedInstrumentIdList = selectedInstrumentIdList.includes(id) ?
+            [...selectedInstrumentIdList].filter(selectedId => selectedId !== id) :
+            [...selectedInstrumentIdList, id]
+
+        const sortedInstrumentDataList = [...instrumentDataList]
+            .sort((a, b) => newSelectedInstrumentIdList.includes(b["Id"]) - newSelectedInstrumentIdList.includes(a["Id"]))
+
+        setSelectedInstrumentIdList(newSelectedInstrumentIdList)
+        setInstrumentDataList(sortedInstrumentDataList)
     };
+
+    const onSearchClick = async () => {
+        try {
+            const data = await getFilteredInstruments(filters); // Call the async function
+
+            const rows: InstrumentData[] = data.data.map(item => { return (
+                {
+                    "Id": item['instrumentId'],
+                    "InstrumentGroup": item['instrumentGroup'],
+                    "Instrument": item['instrument'],
+                    "Department": item['department'],
+                    "RiskCountry": item['riskCountry'],
+                    "Exchange": item['exchange'],
+                    "TradeCCY": item['tradeCCY'],
+                    "SettlementCCY": item['settlementCCY'],
+                })})
+                .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
+
+            setInstrumentDataList(rows); // Update the state with the response data
+            console.log(data.data) // Update the state with the response data
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -48,15 +77,16 @@ export default function Page() {
 
                 const rows: InstrumentData[] = data.data.map(item => { return (
                 {
-                    "Id": item['instrument_id'],
-                    "InstrumentGroup": item['instrument_group'],
+                    "Id": item['instrumentId'],
+                    "InstrumentGroup": item['instrumentGroup'],
                     "Instrument": item['instrument'],
                     "Department": item['department'],
-                    "RiskCountry": item['risk_country'],
+                    "RiskCountry": item['riskCountry'],
                     "Exchange": item['exchange'],
-                    "TradeCCY": item['tradeccy'],
-                    "SettlementCCY": item['settlementccy'],
-                })});
+                    "TradeCCY": item['tradeCCY'],
+                    "SettlementCCY": item['settlementCCY'],
+                })})
+                .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
 
                 setInstrumentDataList(rows); // Update the state with the response data
                 console.log(data.data) // Update the state with the response data
@@ -82,10 +112,10 @@ export default function Page() {
                     )
                 })}
             </ul>
-            <Button>
+            <Button onClick={onSearchClick}>
                 Search
             </Button>
-            <div className="flex mt-10 h-80 border border-gray-300 rounded">
+            <div style={{height: 250}} className="flex mt-10 h-80 border border-gray-300 rounded">
                 <InstrumentTable
                     instrumentDataList={instrumentDataList}
                     selectedInstrumentIdList={selectedInstrumentIdList}
