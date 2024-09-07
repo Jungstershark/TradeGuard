@@ -35,13 +35,13 @@ function TextForm({label, optionsList, selectedOption, onOptionSelected}:{label:
     );
 }
 
-export default function Page() {
+export default function Page({ params }: { params: {slug: string} }) {
     const [formParams, setFormParams] = useState(initialFilters)
     const [options, setOptions] = useState(initialOptions)
 
     const router = useRouter()
-    const params = useParams();
-    const { filterString } = params
+    const filter = JSON.parse(decodeURIComponent(params.slug));
+    console.log(filter)
 
     function onOptionSelected(e, param) {
 
@@ -78,8 +78,18 @@ export default function Page() {
                     "Settlement Currency": ["", ...uniqueParams['settlementCCY']],
                 }
 
+                const newFormParams = {
+                    ...formParams
+                }
+                for (const [param, value] of Object.entries(filter)) {
+                    if (newOptions[param].includes(value)) {
+                        newFormParams[param] = value
+                    }
+                }
+
                 setOptions(newOptions); // Update the state with the response data
-                console.log(uniqueParams) // Update the state with the response data
+                setFormParams(newFormParams)
+                // console.log(uniqueParams) // Update the state with the response data
             } catch (error: any) {
                 console.log(error.message);
             }
