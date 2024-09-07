@@ -5,6 +5,7 @@ import Button from "@/app/components/Button";
 import React, { useEffect } from "react";
 import SelectedInstrumentsTable from "./components/SelectedInstrumentsTable";
 import { getLimitsWithFilter } from "@/app/actions/limit_execution";
+import { getInstrumentsById } from "@/app/actions/analysis_execution";
 import { json } from "stream/consumers";
 import { ButtonPurpose } from "@/app/utils/ButtonPurpose";
 
@@ -17,36 +18,41 @@ export default function Page({ params }: { params: { slug: string } }) {
     const [sellStates, setSellStates] = React.useState<{ [key: number]: boolean }>({});
     const [limitOrders, setLimitOrders] = React.useState<{ [key: number]: string }>({});
     const [totalCount, setTotalCount] = React.useState(0);
-    const [instrumentGroup, setInstrumentGroup] = React.useState("");
+    const [instrumentGroup, setInstrumentGroup] = React.useState(testInstrumentsData[0].InstrumentGroup);
+    const [instrumentData, setInstrumentData] = React.useState<InstrumentData[]>([]);
 
     //states for the limit data
     const [limitData, setLimitData] = React.useState<LimitData[]>([]);
 
-    
+    const instrumentIds = JSON.parse(decodeURIComponent(params.slug));
 
     // Fetch the selected instruments data
     useEffect(() => {
-        setInstrumentGroup(testInstrumentsData[0].InstrumentGroup);
-        // async function fetchSelectedInstruments() {
-        //     try {
-        //         const data = await getLimitsHigherThanTotal(totalCount); // Call the async function
+        
+        async function fetchSelectedInstruments() {
+            try {
+                const data = await getInstrumentsById(instrumentIds); // Call the async function
 
-        //         const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
-        //             ID: item['id'],
-        //             Counterparty: item['counterparty'],
-        //             InstrumentGroup: item['instrumentGroup'],
-        //             Currency: item['currency'],
-        //             AvailableLimit: item['availableLimit'],
-        //             DataDate: item['dataDate']
-        //         }));
+                const rows: InstrumentData[] = data.data.map((item: { [x: string]: any; }) => ({
+                    "Id": item['instrumentId'],
+                    "InstrumentGroup": item['instrumentGroup'],
+                    "Instrument": item['instrument'],
+                    "Department": item['department'],
+                    "RiskCountry": item['riskCountry'],
+                    "Exchange": item['exchange'],
+                    "TradeCCY": item['tradeCCY'],
+                    "SettlementCCY": item['settlementCCY'],
+                }));
 
-        //         setLimitData(rows); // Update the state with the response data
-        //     } catch (error: any) {
-        //         console.log(error.message);
-        //     }
-        // }
+                setInstrumentData(rows); // Update the state with the response data
+                setInstrumentGroup(rows[0].InstrumentGroup);
+                console.log("successfully fetched instrument data")
+            } catch (error: any) {
+                console.log(error.message);
+            }
+        }
 
-        // fetchSelectedInstruments();
+        fetchSelectedInstruments();
     }, []);
 
     // Fetch the limit data
@@ -81,7 +87,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <div className="text-lg py-3">
                     Instruments to Trade
                 </div>
-                <SelectedInstrumentsTable rows={testInstrumentsData} totalCount={totalCount} setTotalCount={setTotalCount} sellStates={sellStates} setSellStates={setSellStates} limitOrders={limitOrders} setLimitOrders={setLimitOrders} />
+                <SelectedInstrumentsTable rows={instrumentData} totalCount={totalCount} setTotalCount={setTotalCount} sellStates={sellStates} setSellStates={setSellStates} limitOrders={limitOrders} setLimitOrders={setLimitOrders} />
             </div>
 
             <div className="w-full flex justify-end flex-row items-center">
