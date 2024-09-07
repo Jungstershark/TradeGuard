@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import { initialFilters } from "@/app/market-analysis/page";
 import { getUniqueParams, postApprovalForm} from "@/app/actions/analysis_execution";
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 const initialOptions = {
     "Instrument Group": [""],
@@ -40,6 +40,8 @@ export default function Page() {
     const [options, setOptions] = useState(initialOptions)
 
     const router = useRouter()
+    const params = useParams();
+    const { filterString } = params
 
     function onOptionSelected(e, param) {
 
