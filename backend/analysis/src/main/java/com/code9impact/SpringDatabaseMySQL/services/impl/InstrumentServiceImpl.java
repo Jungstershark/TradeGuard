@@ -47,6 +47,40 @@ public class InstrumentServiceImpl implements InstrumentService {
         return instrumentRepository.findByInstrumentIdIn(ids);
     }
 
+    @Override
+    public List<String> getDistinctInstrumentGroup() {
+        return instrumentRepository.findDistinctInstrumentGroup();
+    }
+
+    @Override
+    public List<String> getDistinctInstrument() {
+        return instrumentRepository.findDistinctInstrument();
+    }
+
+    @Override
+    public List<String> getDistinctDepartment() {
+        return instrumentRepository.findDistinctDepartment();
+    }
+
+    @Override
+    public List<String> getDistinctRiskCountry() {
+        return instrumentRepository.findDistinctRiskCountry();
+    }
+
+    @Override
+    public List<String> getDistinctExchange() {
+        return instrumentRepository.findDistinctExchange();
+    }
+
+    @Override
+    public List<String> getDistinctTradeCCY() {
+        return instrumentRepository.findDistinctTradeCCY();
+    }
+
+    @Override
+    public List<String> getDistinctSettlementCCY() {
+        return instrumentRepository.findDistinctSettlementCCY();
+    }
 
 }
 

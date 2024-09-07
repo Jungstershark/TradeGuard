@@ -92,7 +92,7 @@ export default function SelectedInstrumentsTable(
                             <TableCell align="right">
                                 <input
                                     onChange={(e) => updateLimitOrders(row.Id, e.target.value)}
-                                    value={limitOrders[row.Id] || '0'}
+                                    value={limitOrders[row.Id] || ''}
                                     className="border" style={{ padding: '10px 20px', cursor: 'pointer' }} />
                             </TableCell>
                         </TableRow>
