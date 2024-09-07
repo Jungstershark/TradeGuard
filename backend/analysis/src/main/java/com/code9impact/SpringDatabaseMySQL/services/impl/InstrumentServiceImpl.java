@@ -37,5 +37,10 @@ public class InstrumentServiceImpl implements InstrumentService {
         return instrumentRepository.findByInstrumentGroup(instrumentGroup);
     }
 
+    @Override
+    public Instrument addInstrument(Instrument newInstrument) {
+        return instrumentRepository.save(newInstrument);
+    }
+
 
 }

@@ -84,5 +84,12 @@ public ResponseEntity<Iterable<Instrument>> searchInstruments(@RequestBody Instr
         System.out.println(instrumentGroup);
         return new ResponseEntity<Iterable<Instrument>>(instrumentService.findInstrumentsByInstrumentGroup(instrumentGroup), HttpStatus.OK);
     }
+
+    //Create new instrument
+    @PostMapping(path = "/instruments", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Instrument> addInstrument(@RequestBody Instrument newInstrument) {
+        Instrument instrument = instrumentService.addInstrument(newInstrument);
+        return new ResponseEntity<>(instrument, HttpStatus.CREATED);
+    }
 }
 
