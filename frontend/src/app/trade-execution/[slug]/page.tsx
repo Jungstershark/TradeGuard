@@ -30,7 +30,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 }));
 
                 setLimitData(rows); // Update the state with the response data
-                // console.log(data.data) // Update the state with the response data
+                console.log(data.data) // Update the state with the response data
             } catch (error: any) {
                 console.log(error.message);
             }
