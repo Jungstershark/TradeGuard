@@ -21,7 +21,7 @@ export default function Sidebar() {
                     <text className="pl-2">Home</text>
                 </Link>
                 <Link
-                    href="/page1"
+                    href="/market-analysis"
                     className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/market-analysis" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
                 >
                     {pathname === "/market-analysis" && <AiFillFolder style={{ fontSize: '24px' }} />}
@@ -29,7 +29,7 @@ export default function Sidebar() {
                     <text className="pl-2">Market Analysis</text>
                 </Link>
                 <Link
-                    href="/page2"
+                    href="/trade-execution"
                     className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/trade-execution" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
                 >
                     {pathname === "/trade-execution" && <AiFillCloud style={{ fontSize: '24px' }} />}
