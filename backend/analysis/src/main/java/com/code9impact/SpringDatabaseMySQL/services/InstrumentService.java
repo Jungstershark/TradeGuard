@@ -3,6 +3,7 @@ package com.code9impact.SpringDatabaseMySQL.services;
 import com.code9impact.SpringDatabaseMySQL.domains.Instrument;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface InstrumentService {
@@ -32,4 +33,6 @@ public interface InstrumentService {
     List<String> getDistinctTradeCCY();
 
     List<String> getDistinctSettlementCCY();
+
+    Map<String, List<String>> getAllDistinctFields();
 }

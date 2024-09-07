@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -137,5 +138,10 @@ public class InstrumentController {
         return new ResponseEntity<>(instrumentService.getDistinctSettlementCCY(), HttpStatus.OK);
     }
 
+    @GetMapping("/instruments/uniqueparams")
+    public ResponseEntity<Map<String, List<String>>> getAllUniqueParams() {
+        Map<String, List<String>> uniqueFields = instrumentService.getAllDistinctFields();
+        return ResponseEntity.ok(uniqueFields);
+    }
 }
 

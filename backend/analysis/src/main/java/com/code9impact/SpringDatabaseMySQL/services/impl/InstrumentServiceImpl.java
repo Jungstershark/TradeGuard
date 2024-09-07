@@ -5,7 +5,9 @@ import com.code9impact.SpringDatabaseMySQL.repositories.InstrumentRepository;
 import com.code9impact.SpringDatabaseMySQL.services.InstrumentService;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -80,6 +82,21 @@ public class InstrumentServiceImpl implements InstrumentService {
     @Override
     public List<String> getDistinctSettlementCCY() {
         return instrumentRepository.findDistinctSettlementCCY();
+    }
+
+    @Override
+    public Map<String, List<String>> getAllDistinctFields() {
+        Map<String, List<String>> distinctFields = new HashMap<>();
+
+        distinctFields.put("instrumentGroup", instrumentRepository.findDistinctInstrumentGroup());
+        distinctFields.put("instrument", instrumentRepository.findDistinctInstrument());
+        distinctFields.put("department", instrumentRepository.findDistinctDepartment());
+        distinctFields.put("riskCountry", instrumentRepository.findDistinctRiskCountry());
+        distinctFields.put("exchange", instrumentRepository.findDistinctExchange());
+        distinctFields.put("tradeCCY", instrumentRepository.findDistinctTradeCCY());
+        distinctFields.put("settlementCCY", instrumentRepository.findDistinctSettlementCCY());
+
+        return distinctFields;
     }
 
 }
