@@ -10,12 +10,13 @@ import Paper from '@mui/material/Paper';
 import Button from '@/app/components/Button';
 import TablePagination from '@mui/material/TablePagination';
 import { ButtonPurpose } from '@/app/utils/ButtonPurpose';
+import { submitTrade } from '@/app/actions/limit_execution';
 
 interface LimitTableProps {
     rows: LimitData[];
 }
 
-export default function LimitTable({ rows }: LimitTableProps) {
+export default function LimitTable({ rows, totalLimitCount }: { rows: LimitData[], totalLimitCount: number }) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [page, setPage] = React.useState(0);
 
@@ -28,6 +29,21 @@ export default function LimitTable({ rows }: LimitTableProps) {
         setPage(0);
     };
 
+    const handleSubmit = async (event: React.FormEvent, id: string) => {
+        try {
+            const result = await submitTrade(totalLimitCount, id);  // Pass FormData to onSubmit
+            console.log(result);
+            if (result.errors) {
+                console.error("Error during form submission:", result.errors);  // Handle errors
+            } else if (result.success) {
+                alert("Trade submitted successfully");
+            }
+        } catch (error) {
+            console.error("Error during form submission:", error);
+            alert("Trade Unsuccessful");
+        }
+    };
+
 
     const visibleRows = React.useMemo(() => {
         return [...rows] // Copy the rows array
@@ -37,7 +53,7 @@ export default function LimitTable({ rows }: LimitTableProps) {
     const emptyRows = Math.max(0, (1 + page) * rowsPerPage - rows.length);
 
     return (
-        <Paper className = "">
+        <Paper className="">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -66,7 +82,11 @@ export default function LimitTable({ rows }: LimitTableProps) {
                                 <TableCell align="center">{row.AvailableLimit}</TableCell>
                                 <TableCell align="center">{row.DataDate}</TableCell>
                                 <TableCell align="center">
-                                    <Button text="Trade" link={`/execution-form/${row.ID}`} purpose={ButtonPurpose.Ready} />
+                                    <div
+                                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white`}
+                                        onClick={handleSubmit}>
+                                        Trade
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}

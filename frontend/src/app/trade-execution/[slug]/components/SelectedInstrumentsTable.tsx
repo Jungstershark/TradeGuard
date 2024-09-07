@@ -14,14 +14,11 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type formAction = (id: Number) => void;
 export default function SelectedInstrumentsTable(
-    { rows, handleCheckboxChange, totalCount, setTotalCount }:
+    { rows, handleCheckboxChange, totalCount, limitOrders, sellStates, setTotalCount, setLimitOrders, setSellStates }:
         {
-            rows: InstrumentData[], handleCheckboxChange: formAction, totalCount: number,
-            setTotalCount: React.Dispatch<React.SetStateAction<number>>
+            rows: InstrumentData[], handleCheckboxChange: formAction, totalCount: number, limitOrders: { [key: number]: string }, sellStates: { [key: number]: boolean },
+            setTotalCount: React.Dispatch<React.SetStateAction<number>>, setLimitOrders: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>, setSellStates: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>
         }) {
-
-    const [sellStates, setSellStates] = React.useState<{ [key: number]: boolean }>({});
-    const [limitOrders, setLimitOrders] = React.useState<{ [key: number]: string }>({});
 
     const toggleSellStates = (id: number) => {
         setSellStates((prevState) => ({
@@ -53,15 +50,15 @@ export default function SelectedInstrumentsTable(
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="right">Instrument Group</TableCell>
-                        <TableCell align="right">Instrument</TableCell>
-                        <TableCell align="right">Department</TableCell>
-                        <TableCell align="right">Risk Country</TableCell>
-                        <TableCell align="right">Exchange</TableCell>
-                        <TableCell align="right">Trade Currency</TableCell>
-                        <TableCell align="right">Settlement Currency</TableCell>
-                        <TableCell align="right">Action</TableCell>
-                        <TableCell align="right">Amount</TableCell>
+                        <TableCell align="center">Instrument Group</TableCell>
+                        <TableCell align="center">Instrument</TableCell>
+                        <TableCell align="center">Department</TableCell>
+                        <TableCell align="center">Risk Country</TableCell>
+                        <TableCell align="center">Exchange</TableCell>
+                        <TableCell align="center">Trade Currency</TableCell>
+                        <TableCell align="center">Settlement Currency</TableCell>
+                        <TableCell align="center">Action</TableCell>
+                        <TableCell align="center">Amount</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -70,18 +67,14 @@ export default function SelectedInstrumentsTable(
                             key={row.Id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell align="right">{row.InstrumentGroup}</TableCell>
-                            <TableCell align="right">{row.Instrument}</TableCell>
-                            <TableCell align="right">{row.Department}</TableCell>
-                            <TableCell align="right">{row.RiskCountry}</TableCell>
-                            <TableCell align="right">{row.Exchange}</TableCell>
-                            <TableCell align="right">{row.TradeCCY}</TableCell>
-                            <TableCell align="right">{row.SettlementCCY}</TableCell>
-                            <TableCell align="right">
-                                {/* <button onClick={() => toggleSellStates(row.Id)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }}>
-                                    {sellStates[row.Id] ? 'Sell' : 'Buy'}
-                                </button> */}
-
+                            <TableCell align="center">{row.InstrumentGroup}</TableCell>
+                            <TableCell align="center">{row.Instrument}</TableCell>
+                            <TableCell align="center">{row.Department}</TableCell>
+                            <TableCell align="center">{row.RiskCountry}</TableCell>
+                            <TableCell align="center">{row.Exchange}</TableCell>
+                            <TableCell align="center">{row.TradeCCY}</TableCell>
+                            <TableCell align="center">{row.SettlementCCY}</TableCell>
+                            <TableCell align="center">
                                 <ToggleButtonGroup
                                     value={sellStates[row.Id] ? 'sell' : 'buy'}
                                     exclusive
@@ -97,7 +90,10 @@ export default function SelectedInstrumentsTable(
                                 </ToggleButtonGroup>
                             </TableCell>
                             <TableCell align="right">
-                                <input onChange={(e) => updateLimitOrders(row.Id, e.target.value)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }} />
+                                <input
+                                    onChange={(e) => updateLimitOrders(row.Id, e.target.value)}
+                                    value={limitOrders[row.Id] || '0'}
+                                    className="border" style={{ padding: '10px 20px', cursor: 'pointer' }} />
                             </TableCell>
                         </TableRow>
                     ))}

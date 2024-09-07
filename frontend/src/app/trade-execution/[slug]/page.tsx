@@ -4,7 +4,7 @@ import LimitTable from "./components/LimitTable";
 import Button from "@/app/components/Button";
 import React, { useEffect } from "react";
 import SelectedInstrumentsTable from "./components/SelectedInstrumentsTable";
-import { getAllLimits } from "@/app/actions/limit_execution";
+import { getLimitsHigherThanTotal } from "@/app/actions/limit_execution";
 import { json } from "stream/consumers";
 import { ButtonPurpose } from "@/app/utils/ButtonPurpose";
 
@@ -14,13 +14,20 @@ export default function Page({ params }: { params: { slug: string } }) {
     }
 
     const [totalRequest, setTotalRequest] = React.useState(0);
-    const [limitData, setLimitData] = React.useState<LimitData[]>([]);
+
+    // states for the selected instruments
+    const [sellStates, setSellStates] = React.useState<{ [key: number]: boolean }>({});
+    const [limitOrders, setLimitOrders] = React.useState<{ [key: number]: string }>({});
     const [totalCount, setTotalCount] = React.useState(0);
 
+    //states for the limit data
+    const [limitData, setLimitData] = React.useState<LimitData[]>([]);
+
+
     useEffect(() => {
-        async function fetchData() {
+        async function fetchLimitsData() {
             try {
-                const data = await getAllLimits(); // Call the async function
+                const data = await getLimitsHigherThanTotal(totalCount); // Call the async function
 
                 const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
                     ID: item['id'],
@@ -32,20 +39,22 @@ export default function Page({ params }: { params: { slug: string } }) {
                 }));
 
                 setLimitData(rows); // Update the state with the response data
-                console.log(data.data) // Update the state with the response data
             } catch (error: any) {
                 console.log(error.message);
             }
         }
 
-        fetchData();
-    }, []);
+        fetchLimitsData();
+    }, [totalCount]);
 
     return (
         <main className="flex min-h-screen w-full flex-col items-center p-10 bg-blue-100">
 
-            <div className="flex flex-row justify-around w-full h-1/5">
-                <SelectedInstrumentsTable rows={testInstrumentsData} handleCheckboxChange={() => { }} totalCount={totalCount} setTotalCount={setTotalCount} />
+            <div className="flex flex-col justify-around w-full h-1/5">
+                <div className="text-lg py-3">
+                    Instruments to Trade
+                </div>
+                <SelectedInstrumentsTable rows={testInstrumentsData} handleCheckboxChange={() => { }} totalCount={totalCount} setTotalCount={setTotalCount} sellStates={sellStates} setSellStates={setSellStates} limitOrders={limitOrders} setLimitOrders={setLimitOrders} />
             </div>
 
             <div className="w-full flex justify-end flex-row items-center">
@@ -56,9 +65,12 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <Button text="Edit Instruments" link={`/market-analysis`} purpose={ButtonPurpose.Ready} />
             </div>
 
-            <div className="flex flex-row justify-around w-full h-min">
+            <div className="flex flex-col justify-around w-full h-min">
+                <div className="text-lg py-3">
+                    Submit Limit Order
+                </div>
                 <div className="flex ">
-                    <LimitTable rows={limitData} />
+                    <LimitTable rows={limitData} totalLimitCount={totalCount}/>
                 </div>
             </div>
         </main>
