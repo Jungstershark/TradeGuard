@@ -1,6 +1,6 @@
 -- Create table for ApprovedInstruments with auto-generated primary key using UUID
 CREATE TABLE IF NOT EXISTS approved_instruments (
-    id CHAR(16) PRIMARY KEY,
+    instrument_id CHAR(16) PRIMARY KEY,
     instrument_group VARCHAR(255),
     instrument VARCHAR(255),
     department VARCHAR(255),
@@ -18,5 +18,5 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(instrument_group, instrument, department, risk_country, exchange, tradecy, settlementccy)
-SET id = LEFT(UUID(), 16);
+(instrument_group, instrument, department, risk_country, exchange, tradeccy, settlementccy)
+SET instrument_id = LEFT(UUID(), 16);
