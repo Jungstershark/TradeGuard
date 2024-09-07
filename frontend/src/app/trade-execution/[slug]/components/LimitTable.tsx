@@ -29,16 +29,15 @@ export default function LimitTable({ rows }: LimitTableProps) {
     };
 
 
-    // Ensure that we're not mutating the original rows array
     const visibleRows = React.useMemo(() => {
-        return [...rows] // Create a shallow copy to prevent mutation
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage); // Paginate the rows
+        return [...rows] // Copy the rows array
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     }, [rows, page, rowsPerPage]);
 
     const emptyRows = Math.max(0, (1 + page) * rowsPerPage - rows.length);
 
     return (
-        <Paper>
+        <Paper className = "">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -67,7 +66,7 @@ export default function LimitTable({ rows }: LimitTableProps) {
                                 <TableCell align="center">{row.AvailableLimit}</TableCell>
                                 <TableCell align="center">{row.DataDate}</TableCell>
                                 <TableCell align="center">
-                                    <Button text="trade" link={`/execution-form/${row.ID}`} purpose={ButtonPurpose.Ready} />
+                                    <Button text="Trade" link={`/execution-form/${row.ID}`} purpose={ButtonPurpose.Ready} />
                                 </TableCell>
                             </TableRow>
                         ))}

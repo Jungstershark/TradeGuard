@@ -11,12 +11,41 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 type formAction = (id: Number) => void;
-export default function SelectedInstrumentsTable({ rows, handleCheckboxChange }: { rows: InstrumentData[], handleCheckboxChange: formAction }) {
-    const [isSell, setIsSell] = React.useState(false);
+export default function SelectedInstrumentsTable(
+    { rows, handleCheckboxChange, totalCount, setTotalCount }:
+        {
+            rows: InstrumentData[], handleCheckboxChange: formAction, totalCount: number,
+            setTotalCount: React.Dispatch<React.SetStateAction<number>>
+        }) {
 
-    const toggleButton = () => {
-        setIsSell(prevState => !prevState); // Toggle the state
+    const [sellStates, setSellStates] = React.useState<{ [key: number]: boolean }>({});
+    const [limitOrders, setLimitOrders] = React.useState<{ [key: number]: string }>({});
+
+    const toggleSellStates = (id: number) => {
+        setSellStates((prevState) => ({
+            ...prevState,
+            [id]: !prevState[id],
+        }));
     };
+
+    const updateLimitOrders = (id: number, value: string) => {
+        setLimitOrders((prevLimitOrders) => {
+            const updatedOrders = {
+                ...prevLimitOrders,
+                [id]: value,
+            };
+
+            const total = Object.values(updatedOrders).reduce((acc, val) => {
+                const num = parseFloat(val);
+                return acc + (isNaN(num) ? 0 : num);  // Handle invalid numbers (NaN)
+            }, 0);
+
+            setTotalCount(total);  // Set total count to the sum of all limit orders
+
+            return updatedOrders;  // Return the updated limitOrders state
+        });
+    };
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -40,13 +69,6 @@ export default function SelectedInstrumentsTable({ rows, handleCheckboxChange }:
                             key={row.Id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell>
-                                <Checkbox
-                                    key={row.Id}
-                                    checked={row.IsSelected}
-                                    onChange={() => { handleCheckboxChange(row.Id) }}
-                                />
-                            </TableCell>
                             <TableCell align="right">{row.InstrumentGroup}</TableCell>
                             <TableCell align="right">{row.Instrument}</TableCell>
                             <TableCell align="right">{row.Department}</TableCell>
@@ -55,11 +77,13 @@ export default function SelectedInstrumentsTable({ rows, handleCheckboxChange }:
                             <TableCell align="right">{row.TradeCCY}</TableCell>
                             <TableCell align="right">{row.SettlementCCY}</TableCell>
                             <TableCell align="right">
-                                <button onClick={toggleButton} className="border " style={{ padding: '10px 20px', cursor: 'pointer' }}>
-                                    {isSell ? 'Sell' : 'Buy'}
+                                <button onClick={() => toggleSellStates(row.Id)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }}>
+                                    {sellStates[row.Id] ? 'Sell' : 'Buy'}
                                 </button>
                             </TableCell>
-                            <TableCell align="right">{row.SettlementCCY}</TableCell>
+                            <TableCell align="right">
+                                <input onChange={(e) => updateLimitOrders(row.Id, e.target.value)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }} />
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
