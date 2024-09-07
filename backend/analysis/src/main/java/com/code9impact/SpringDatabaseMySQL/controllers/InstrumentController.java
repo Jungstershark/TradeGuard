@@ -101,5 +101,41 @@ public class InstrumentController {
         Iterable<Instrument> instruments = instrumentService.findInstrumentsByMultipleIds(instrumentIds);
         return new ResponseEntity<>(instruments, HttpStatus.OK);
     }
+
+    @GetMapping("/instruments/uniqueparams/instrument_group")
+    public ResponseEntity<List<String>> getUniqueInstrumentGroup() {
+        return new ResponseEntity<>(instrumentService.getDistinctInstrumentGroup(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/instrument")
+    public ResponseEntity<List<String>> getUniqueInstrument() {
+        return new ResponseEntity<>(instrumentService.getDistinctInstrument(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/department")
+    public ResponseEntity<List<String>> getUniqueDepartment() {
+        return new ResponseEntity<>(instrumentService.getDistinctDepartment(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/risk_country")
+    public ResponseEntity<List<String>> getUniqueRiskCountry() {
+        return new ResponseEntity<>(instrumentService.getDistinctRiskCountry(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/exchange")
+    public ResponseEntity<List<String>> getUniqueExchange() {
+        return new ResponseEntity<>(instrumentService.getDistinctExchange(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/trade_ccy")
+    public ResponseEntity<List<String>> getUniqueTradeCCY() {
+        return new ResponseEntity<>(instrumentService.getDistinctTradeCCY(), HttpStatus.OK);
+    }
+
+    @GetMapping("/instruments/uniqueparams/settlement_ccy")
+    public ResponseEntity<List<String>> getUniqueSettlementCCY() {
+        return new ResponseEntity<>(instrumentService.getDistinctSettlementCCY(), HttpStatus.OK);
+    }
+
 }
 

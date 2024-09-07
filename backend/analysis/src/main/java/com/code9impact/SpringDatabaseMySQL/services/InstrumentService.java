@@ -19,4 +19,17 @@ public interface InstrumentService {
 
     Iterable<Instrument> findInstrumentsByMultipleIds(List<String> ids);
 
+    List<String> getDistinctInstrumentGroup();
+
+    List<String> getDistinctInstrument();
+
+    List<String> getDistinctDepartment();
+
+    List<String> getDistinctRiskCountry();
+
+    List<String> getDistinctExchange();
+
+    List<String> getDistinctTradeCCY();
+
+    List<String> getDistinctSettlementCCY();
 }
