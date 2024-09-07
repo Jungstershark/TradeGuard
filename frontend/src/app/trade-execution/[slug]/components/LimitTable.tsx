@@ -19,8 +19,6 @@ type Order = 'asc' | 'desc';
 export default function LimitTable({ rows }: LimitTableProps) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [page, setPage] = React.useState(0);
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof LimitData>('AvailableLimit');
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -32,34 +30,11 @@ export default function LimitTable({ rows }: LimitTableProps) {
     };
 
 
-    function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-        if (b[orderBy] < a[orderBy]) {
-            return -1;
-        }
-        if (b[orderBy] > a[orderBy]) {
-            return 1;
-        }
-        return 0;
-    }
-
-    function getComparator<Key extends keyof any>(
-        order: Order,
-        orderBy: Key,
-    ): (
-        a: { [key in Key]: number | string },
-        b: { [key in Key]: number | string },
-    ) => number {
-        return order === 'desc'
-            ? (a, b) => descendingComparator(a, b, orderBy)
-            : (a, b) => -descendingComparator(a, b, orderBy);
-    }
-
     // Ensure that we're not mutating the original rows array
     const visibleRows = React.useMemo(() => {
         return [...rows] // Create a shallow copy to prevent mutation
-            .sort(getComparator(order, orderBy)) // Sort the rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage); // Paginate the rows
-    }, [rows, order, orderBy, page, rowsPerPage]);
+    }, [rows, page, rowsPerPage]);
 
     const emptyRows = Math.max(0, (1 + page) * rowsPerPage - rows.length);
 
