@@ -3,12 +3,12 @@
 import { useState } from 'react';
 
 
-type formAction = (formData: FormData) => Promise<{ errors?: any; success?: boolean; data?: any; }>;
+type formAction = (formData: { [key: string]: string }) => Promise<{ errors?: any; success?: boolean; data?: any; }>;
 
 export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: { [key: string]: string }; onSubmit: formAction; submitButton: String }) {
     // State for form input values
     const [formData, setFormData] = useState<{ [key: string]: string }>(formParams);
-    console.log(formData);
+    // console.log(formData);
 
     // State for managing form submission status and errors
     const [state, setState] = useState<{ pending: boolean; errors: any; success?: boolean; data?: any }>({
@@ -22,7 +22,7 @@ export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: {
             ...formData,
             [e.target.name]: e.target.value,
         });
-        console.log(formData);
+        // console.log(formData);
     };
 
     // Handle form submission
@@ -31,13 +31,15 @@ export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: {
         setState({ ...state, pending: true });
 
         // Create FormData object to send in API request
-        const formSubmissionData = new FormData();
-        Object.keys(formData).forEach((key) => {
-            formSubmissionData.append(key, formData[key]);
-        });
+        // const formSubmissionData = new FormData();
+        // Object.keys(formData).forEach((key) => {
+        //     formSubmissionData.append(key, formData[key]);
+        // });
+
+        // console.log("submission form data "+ formSubmissionData)
 
         try {
-            const result = await onSubmit(formSubmissionData);  // Pass FormData to onSubmit
+            const result = await onSubmit(formData);  // Pass FormData to onSubmit
 
             if (result.errors) {
                 setState({ pending: false, errors: result.errors });  // Handle errors

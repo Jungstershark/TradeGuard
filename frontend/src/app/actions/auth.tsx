@@ -42,16 +42,17 @@ export async function signup(formData: FormData) {
     }
 }
 
-export async function login(formData: FormData) {
+export async function login(formData: { [key: string]: string }) {
     // Validate form fields
     const payload = {
-        "email": formData.get('username'),
-        "password": formData.get('password'),
-        "role": formData.get('role')
+        "email": formData['email'],
+        "password": formData['password'],
+        "department": formData['department']
     };
 
     try {
-        const response = await fetch(`${EXECUTION_API_PREFIX}/auth/login`, {
+        console.log(JSON.stringify(payload));
+        const response = await fetch(`${EXECUTION_API_PREFIX}/auth/authenticate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -71,11 +72,13 @@ export async function login(formData: FormData) {
         }
 
         const data = await response.json();
-        const token = data.token; 
+        const token = data.token;
 
         // 7 days expiration date
         document.cookie = `token=${token}; Path=/; Secure; Max-Age=${7 * 24 * 60 * 60}`;
-        console.log("token stored in local storage");
+        
+        // Store department in a cookie
+        document.cookie = `department=${data.department}; Path=/; Secure; Max-Age=${7 * 24 * 60 * 60}`;
 
         // Return success response
         return { success: true, data };
