@@ -75,6 +75,10 @@ export default function Page() {
         router.push("/trade-execution/" + JSON.stringify(selectedInstrumentIdList) )
     }
 
+    const goToApprovalForm = () => {
+        const data = JSON.stringify(filters)
+    }
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -127,7 +131,12 @@ export default function Page() {
                     handleCheckboxChange={handleCheckboxChange}
                 />
             </div>
-            <div className="flex flex-row-reverse">
+            <div className="flex flex-row justify-between">
+                <button
+                    className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                    onClick={goToApprovalForm}>
+                    Approval Form
+                </button>
                 {selectedInstrumentIdList.length > 0 ? <button
                         className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
                         onClick={goToTradeExecution}>
