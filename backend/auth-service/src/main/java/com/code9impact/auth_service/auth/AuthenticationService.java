@@ -1,6 +1,7 @@
 package com.code9impact.auth_service.auth;
 
 import com.code9impact.auth_service.config.JwtService;
+import com.code9impact.auth_service.domain.Department;
 import com.code9impact.auth_service.domain.Role;
 import com.code9impact.auth_service.domain.User;
 import com.code9impact.auth_service.repositories.UserRepository;
@@ -33,6 +34,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.valueOf(request.getRole()))
+                .department(Department.valueOf(request.getDepartment()))
                 .build();
 
         repository.save(user);
