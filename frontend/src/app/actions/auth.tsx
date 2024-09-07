@@ -1,3 +1,4 @@
+'use client'
 import { API_PREFIX } from '../constants';
 
 export async function signup(formData: FormData) {
