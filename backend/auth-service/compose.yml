@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=AuthDatabase'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - '3310:3306'  # Map MySQL container port 3306 to host port 3308 to avoid conflict with local MySQL
+    restart: unless-stopped  # Ensures the container restarts if it crashes but won't restart on system boot
+    container_name: mysql-auth
+    command: --secure-file-priv=""  # This disables the option
+
+  adminer:
+    image: 'adminer'
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    restart: always
+    ports:
+      - '8891:8080'
