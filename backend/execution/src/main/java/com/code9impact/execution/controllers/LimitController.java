@@ -68,32 +68,6 @@ public class LimitController {
         // Return all limits if no query parameters are provided
         return new ResponseEntity<>((List<LimitObject>) limitService.getAllLimits(), HttpStatus.OK);
     }
-}
-
-    @GetMapping(path = "/limits/filter")
-    @ResponseBody
-    public ResponseEntity<List<LimitObject>> filterLimits(
-            @RequestParam(required = false) Optional<String> instrgrp,  // Optional query parameter
-            @RequestParam(required = false) Optional<Long> limithigher  // Optional query parameter
-    ) {
-        // Filter by both instrgrp and limithigher if both are provided
-        if (instrgrp.isPresent() && limithigher.isPresent()) {
-            return new ResponseEntity<>(limitService.getLimitsInstrGrpAvailLimit(instrgrp.get(), limithigher.get()), HttpStatus.OK);
-        }
-
-        // Filter by only instrgrp if provided
-        if (instrgrp.isPresent()) {
-            return new ResponseEntity<>(limitService.getLimitsByInstrGrp(instrgrp.get()), HttpStatus.OK);
-        }
-
-        // Filter by only limithigher if provided
-        if (limithigher.isPresent()) {
-            return new ResponseEntity<>(limitService.getLimitsByAvailLimit(limithigher.get()), HttpStatus.OK);
-        }
-
-        // Return all limits if no query parameters are provided
-        return new ResponseEntity<>((List<LimitObject>) limitService.getAllLimits(), HttpStatus.OK);
-    }
 
 //    submit trade order form
 //            Realtime data
