@@ -7,6 +7,15 @@ import org.springframework.boot.actuate.autoconfigure.observation.ObservationPro
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import java.util.List;
 import java.util.Optional;
@@ -129,8 +138,32 @@ public class LimitController {
             return new ResponseEntity<>("Limit with provided id not found", HttpStatus.NOT_FOUND);
         }
     }
-}
+
 
 //    submit trade order form
 //            Realtime data
 //                    instrument group, limit higher than amount given
+//                    instrument group limit,
+
+    @GetMapping(path = "/limits/stream")
+    public SseEmitter streamEvents() {
+        SseEmitter emitter = new SseEmitter(0L);
+        ExecutorService sseExecutor = Executors.newSingleThreadExecutor();
+
+        sseExecutor.execute(() -> {
+            try {
+                int keepAliveSeconds = 300;
+                for (int i = 0; i < keepAliveSeconds; i++) {
+                    emitter.send(limitService.getAllLimits()); // Use limitService instance
+                    Thread.sleep(1000);  // Simulating delay
+                }
+                emitter.complete();
+            } catch (IOException | InterruptedException e) {
+                emitter.completeWithError(e);
+            }
+        });
+
+        sseExecutor.shutdown();
+        return emitter;
+    }
+}
