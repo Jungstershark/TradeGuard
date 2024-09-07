@@ -6,4 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LimitRepository extends JpaRepository<LimitObject, String> {
+    List<LimitObject> findByInstrumentGroup(String instrumentGroup);
+
+    List<LimitObject> findByAvailableLimitGreaterThanEqual(Long availableLimit);
+
+    // New method to filter by both instrgrp and limithigher
+    List<LimitObject> findByInstrumentGroupAndAvailableLimitGreaterThanEqual(String instrumentGroup, Long availableLimit);
 }

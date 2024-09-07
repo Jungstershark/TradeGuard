@@ -28,6 +28,21 @@ public class LimitServiceImpl implements LimitService {
         return limitRepository.findById(id);
     }
 
+    @Override
+    public List<LimitObject> getLimitsInstrGrpAvailLimit(String instrumentGroup, Long availableLimit) {
+        return limitRepository.findByInstrumentGroupAndAvailableLimitGreaterThanEqual(instrumentGroup, availableLimit);
+    }
+
+    @Override
+    public List<LimitObject> getLimitsByInstrGrp(String instrumentGroup) {
+        return limitRepository.findByInstrumentGroup(instrumentGroup);
+    }
+
+    @Override
+    public List<LimitObject> getLimitsByAvailLimit(Long availableLimit) {
+        return limitRepository.findByAvailableLimitGreaterThanEqual(availableLimit);
+    }
+
 
 }
 
