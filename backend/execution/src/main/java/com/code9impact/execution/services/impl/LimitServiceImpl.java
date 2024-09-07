@@ -43,6 +43,62 @@ public class LimitServiceImpl implements LimitService {
         return limitRepository.findByAvailableLimitGreaterThanEqual(availableLimit);
     }
 
+    @Override
+    public boolean updateAvailableLimit(String id, Long amount) {
+        Optional<LimitObject> limitOptional = limitRepository.findById(id);
+
+        if (limitOptional.isPresent()) {
+            LimitObject limit = limitOptional.get();
+            Long currentLimit = limit.getAvailableLimit();
+
+            if (amount > currentLimit) {
+                // The operation is not allowed as the amount exceeds the current available limit
+                return false;
+            }
+
+            // Subtract the amount and update the available limit
+            Long newLimit = currentLimit - amount;
+            limit.setAvailableLimit(newLimit);
+            limitRepository.save(limit);  // Save the updated limit to the database
+            return true;
+        }
+
+        // Return false if the limit object is not found
+        return false;
+    }
+
+    @Override
+    public LimitObject createLimit(LimitObject limitObject) {
+        // Check if a combination already exists
+        Optional<LimitObject> existingLimit = limitRepository.findByInstrumentGroupAndCounterpartyAndCurrencyAndAvailableLimit(
+                limitObject.getInstrumentGroup(),
+                limitObject.getCounterparty(),
+                limitObject.getCurrency(),
+                limitObject.getAvailableLimit()
+        );
+        System.out.println(existingLimit.isPresent());
+
+        // If the combination exists, throw an exception or return null (depending on your business logic)
+        if (existingLimit.isPresent()) {
+            throw new IllegalArgumentException("A limit with the same combination of InstrumentGroup, Counterparty, Currency, and AvailableLimit already exists.");
+        }
+
+        // If no such combination exists, save the new limit object
+        return limitRepository.save(limitObject);
+    }
+
+    @Override
+    public boolean deleteLimitById(String id) {
+        Optional<LimitObject> limitOptional = limitRepository.findById(id);
+
+        if (limitOptional.isPresent()) {
+            limitRepository.deleteById(id);  // Delete the record if found
+            return true;
+        } else {
+            return false;  // Return false if the record was not found
+        }
+    }
+
 
 }
 

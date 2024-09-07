@@ -1,12 +1,10 @@
 package com.code9impact.execution.domains;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -35,4 +33,59 @@ public class LimitObject {
     @Column(name = "data_date")  // Explicitly map to the database column name
     private LocalDate dataDate;
 
+
+    @PrePersist
+    public void generateUUID() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getInstrumentGroup() {
+        return instrumentGroup;
+    }
+
+    public void setInstrumentGroup(String instrumentGroup) {
+        this.instrumentGroup = instrumentGroup;
+    }
+
+    public String getCounterparty() {
+        return counterparty;
+    }
+
+    public void setCounterparty(String counterparty) {
+        this.counterparty = counterparty;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public Long getAvailableLimit() {
+        return availableLimit;
+    }
+
+    public void setAvailableLimit(Long availableLimit) {
+        this.availableLimit = availableLimit;
+    }
+
+    public LocalDate getDataDate() {
+        return dataDate;
+    }
+
+    public void setDataDate(LocalDate dataDate) {
+        this.dataDate = dataDate;
+    }
 }

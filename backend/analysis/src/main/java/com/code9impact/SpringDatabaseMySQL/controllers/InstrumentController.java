@@ -11,6 +11,7 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class InstrumentController {
@@ -23,15 +24,17 @@ public class InstrumentController {
 
     @GetMapping(path = "/instruments")
     public ResponseEntity<Iterable<Instrument>> getAllInstruments() {
-        return new ResponseEntity<Iterable<Instrument>>(instrumentService.getAllInstruments(), HttpStatus.OK);
+        return new ResponseEntity<Iterable<Instrument>>(
+                instrumentService.getAllInstruments(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/instruments/id/{id}")
     public ResponseEntity<Optional<Instrument>> getInstrumentById(@PathVariable String id) {
-        return new ResponseEntity<Optional<Instrument>>(instrumentService.getInstrumentById(id), HttpStatus.OK);
+        return new ResponseEntity<Optional<Instrument>>(
+                instrumentService.getInstrumentById(id), HttpStatus.OK);
     }
 
-//    @GetMapping(path = "/instruments/search")
+    //    @GetMapping(path = "/instruments/search")
 //    public ResponseEntity<Iterable<Instrument>> searchInstruments(
 //            @RequestParam(required = false) String instrumentGroup,
 //            @RequestParam(required = false) String instrument,
@@ -54,30 +57,30 @@ public class InstrumentController {
 //        // Return a ResponseEntity with the list of instruments and HTTP status
 //        return new ResponseEntity<>(instruments, HttpStatus.OK);
 //    }
-@PostMapping(path = "/instruments/search", consumes = "application/json", produces = "application/json")
-public ResponseEntity<Iterable<Instrument>> searchInstruments(@RequestBody InstrumentSearchRequest searchRequest) {
-    // Debugging output for request fields
-    System.out.println("Instrument Group: " + searchRequest.getInstrumentGroup());
-    System.out.println("Instrument: " + searchRequest.getInstrument());
-    System.out.println("Department: " + searchRequest.getDepartment());
-    System.out.println("Risk Country: " + searchRequest.getRiskCountry());
-    System.out.println("Exchange: " + searchRequest.getExchange());
-    System.out.println("Trade CCY: " + searchRequest.getTradeCCY());
-    System.out.println("Settlement CCY: " + searchRequest.getSettlementCCY());
+    @PostMapping(path = "/instruments/search", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Iterable<Instrument>> searchInstruments(@RequestBody InstrumentSearchRequest searchRequest) {
+        // Debugging output for request fields
+        System.out.println("Instrument Group: " + searchRequest.getInstrumentGroup());
+        System.out.println("Instrument: " + searchRequest.getInstrument());
+        System.out.println("Department: " + searchRequest.getDepartment());
+        System.out.println("Risk Country: " + searchRequest.getRiskCountry());
+        System.out.println("Exchange: " + searchRequest.getExchange());
+        System.out.println("Trade CCY: " + searchRequest.getTradeCCY());
+        System.out.println("Settlement CCY: " + searchRequest.getSettlementCCY());
 
-    // Use the instrumentService to search based on provided fields in the request body
-    Iterable<Instrument> instruments = instrumentService.findInstruments(
-            searchRequest.getInstrumentGroup(),
-            searchRequest.getInstrument(),
-            searchRequest.getDepartment(),
-            searchRequest.getRiskCountry(),
-            searchRequest.getExchange(),
-            searchRequest.getTradeCCY(),
-            searchRequest.getSettlementCCY()
-    );
+        // Use the instrumentService to search based on provided fields in the request body
+        Iterable<Instrument> instruments = instrumentService.findInstruments(
+                searchRequest.getInstrumentGroup(),
+                searchRequest.getInstrument(),
+                searchRequest.getDepartment(),
+                searchRequest.getRiskCountry(),
+                searchRequest.getExchange(),
+                searchRequest.getTradeCCY(),
+                searchRequest.getSettlementCCY()
+        );
 
-    return new ResponseEntity<>(instruments, HttpStatus.OK);
-}
+        return new ResponseEntity<>(instruments, HttpStatus.OK);
+    }
 
     @GetMapping(path = "/instruments/group/{instrumentGroup}")
     public ResponseEntity<Iterable<Instrument>> getInstrumentsByGroup(@PathVariable String instrumentGroup) {
