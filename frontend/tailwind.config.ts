@@ -1,6 +1,10 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config: {
+  plugins: any[];
+  theme: { extend: { backgroundImage: { "gradient-conic": string; "gradient-radial": string }; colors: {} } };
+  content: string[]
+} = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,6 +12,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'gic-blue': '#0e234e'
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
