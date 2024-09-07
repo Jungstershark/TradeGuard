@@ -12,7 +12,7 @@ services:
       - ../assets:/docker-entrypoint-initdb.d/assets  # Mount CSV files
       - ./mysql-init:/docker-entrypoint-initdb.d     # Mount SQL scripts
     ports:
-      - '3308:3308'  # Map MySQL container port 3306 to host port 3307 to avoid conflict with local MySQL
+      - '3308:3306'  # Map MySQL container port 3306 to host port 3308 to avoid conflict with local MySQL
     restart: unless-stopped  # Ensures the container restarts if it crashes but won't restart on system boot
     container_name: mysql-execution
     command: --secure-file-priv=""  # This disables the option
