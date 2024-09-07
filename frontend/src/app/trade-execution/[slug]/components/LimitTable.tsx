@@ -88,11 +88,6 @@ export default function LimitTable({ rows, totalLimitCount }: { rows: LimitData[
                                 <TableCell align="center">{row.DataDate}</TableCell>
                                 <TableCell align="center">
                                     <FunctionButton text="Trade"formAction={handleSubmit} formActionProps={row.ID} />
-                                    {/* <div
-                                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white`}
-                                        onClick={(e) => handleSubmit(e, row.ID)}>
-                                        Trade
-                                    </div> */}
                                 </TableCell>
                             </TableRow>
                         ))}

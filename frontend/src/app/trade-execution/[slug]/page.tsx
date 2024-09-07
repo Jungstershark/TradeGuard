@@ -4,7 +4,7 @@ import LimitTable from "./components/LimitTable";
 import Button from "@/app/components/Button";
 import React, { useEffect } from "react";
 import SelectedInstrumentsTable from "./components/SelectedInstrumentsTable";
-import { getLimitsHigherThanTotal } from "@/app/actions/limit_execution";
+import { getLimitsWithFilter } from "@/app/actions/limit_execution";
 import { json } from "stream/consumers";
 import { ButtonPurpose } from "@/app/utils/ButtonPurpose";
 
@@ -13,21 +13,47 @@ export default function Page({ params }: { params: { slug: string } }) {
         return <div>Loading...</div>;
     }
 
-    const [totalRequest, setTotalRequest] = React.useState(0);
-
     // states for the selected instruments
     const [sellStates, setSellStates] = React.useState<{ [key: number]: boolean }>({});
     const [limitOrders, setLimitOrders] = React.useState<{ [key: number]: string }>({});
     const [totalCount, setTotalCount] = React.useState(0);
+    const [instrumentGroup, setInstrumentGroup] = React.useState("");
 
     //states for the limit data
     const [limitData, setLimitData] = React.useState<LimitData[]>([]);
 
+    
 
+    // Fetch the selected instruments data
+    useEffect(() => {
+        setInstrumentGroup(testInstrumentsData[0].InstrumentGroup);
+        // async function fetchSelectedInstruments() {
+        //     try {
+        //         const data = await getLimitsHigherThanTotal(totalCount); // Call the async function
+
+        //         const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
+        //             ID: item['id'],
+        //             Counterparty: item['counterparty'],
+        //             InstrumentGroup: item['instrumentGroup'],
+        //             Currency: item['currency'],
+        //             AvailableLimit: item['availableLimit'],
+        //             DataDate: item['dataDate']
+        //         }));
+
+        //         setLimitData(rows); // Update the state with the response data
+        //     } catch (error: any) {
+        //         console.log(error.message);
+        //     }
+        // }
+
+        // fetchSelectedInstruments();
+    }, []);
+
+    // Fetch the limit data
     useEffect(() => {
         async function fetchLimitsData() {
             try {
-                const data = await getLimitsHigherThanTotal(totalCount); // Call the async function
+                const data = await getLimitsWithFilter(totalCount, instrumentGroup); // Call the async function
 
                 const rows: LimitData[] = data.data.map((item: { [x: string]: any; }) => ({
                     ID: item['id'],
@@ -39,13 +65,14 @@ export default function Page({ params }: { params: { slug: string } }) {
                 }));
 
                 setLimitData(rows); // Update the state with the response data
+                console.log(data);
             } catch (error: any) {
                 console.log(error.message);
             }
         }
 
         fetchLimitsData();
-    }, [totalCount]);
+    }, [instrumentGroup, totalCount]);
 
     return (
         <main className="flex min-h-screen w-full flex-col items-center p-10 bg-blue-100">
@@ -70,7 +97,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     Submit Limit Order
                 </div>
                 <div className="flex ">
-                    <LimitTable rows={limitData} totalLimitCount={totalCount}/>
+                    <LimitTable rows={limitData} totalLimitCount={totalCount} />
                 </div>
             </div>
         </main>
