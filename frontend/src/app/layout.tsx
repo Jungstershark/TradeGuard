@@ -17,9 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`flex ${inter.className}`}>
+      <body className={`flex flex-row flex-start ${inter.className}`}>
+      <div className="w-64">
         <Sidebar/>
-        {children}
+      </div>
+      {children}
       </body>
     </html>
   );
