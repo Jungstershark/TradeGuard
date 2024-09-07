@@ -32,15 +32,22 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
     const [department, setDepartment] = useState<string | null>(null);
 
     useEffect(() => {
+        
         // Retrieve the token and department from cookies
         const retrievedToken = getCookie('token');
         const retrievedDepartment = getCookie('department');
 
-        setToken(retrievedToken);
-        setDepartment(retrievedDepartment);
+        // console.log('Token:', retrievedToken);
+        // console.log('Department:', retrievedDepartment);
 
-        console.log('Token:', retrievedToken);
-        console.log('Department:', retrievedDepartment);
+        if (retrievedDepartment != null) {
+            const newFilters = {
+                ...filters,
+                ["Department"]: retrievedDepartment
+            }
+            setFilters(newFilters)
+        }
+        console.log(filters)
     }, []);
 
     const handleChange = (e) => {
