@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`flex flex-row flex-start ${inter.className}`}>
-      <div className="w-64">
+      <div className="w-64 min-h-screen">
         <Sidebar/>
       </div>
       {children}
