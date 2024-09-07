@@ -14,4 +14,8 @@ public interface InstrumentService {
     Iterable<Instrument> findInstruments(String instrumentGroup, String instrument, String department, String riskCountry, String exchange, String tradeCCY, String exchangeCCY);
 
     Iterable<Instrument> findInstrumentsByInstrumentGroup(String instrumentGroup);
+
+    Instrument addInstrument(Instrument newInstrument);
+
+    Iterable<Instrument> findInstrumentsByMultipleIds(List<String> ids);
 }

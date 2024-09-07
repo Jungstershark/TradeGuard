@@ -19,5 +19,5 @@ IGNORE 1 ROWS
 (instrument_group, counterparty, currency, @available_limit, @data_date)
 SET id = LEFT(REPLACE(UUID(), '-', ''), 16),
 -- SET id = LEFT(UUID(), 16),
-    available_limit = REPLACE(@AvailableLimit, ',', ''),
-    data_date = STR_TO_DATE(@DataDate, '%m/%d/%Y');
+    available_limit = REPLACE(@available_limit, ',', ''),
+    data_date = STR_TO_DATE(@data_date, '%m/%d/%Y');

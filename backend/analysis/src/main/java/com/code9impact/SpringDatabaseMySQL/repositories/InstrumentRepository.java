@@ -14,7 +14,7 @@ public interface InstrumentRepository extends JpaRepository<Instrument, String> 
 
     Optional<Instrument> findById(String id);
 
-//    List<Instrument> findByInstrumentGroupAndInstrumentAndDepartmentAndRiskCountryAndExchangeAndTradeCCYAndSettlementCCY(
+    //    List<Instrument> findByInstrumentGroupAndInstrumentAndDepartmentAndRiskCountryAndExchangeAndTradeCCYAndSettlementCCY(
 //            String instrumentGroup,
 //            String instrument,
 //            String department,
@@ -23,22 +23,25 @@ public interface InstrumentRepository extends JpaRepository<Instrument, String> 
 //            String tradeCCY,
 //            String settlementCCY
 //    );
-@Query("SELECT i FROM Instrument i WHERE " +
-        "(:instrumentGroup IS NULL OR i.instrumentGroup = :instrumentGroup) AND " +
-        "(:instrument IS NULL OR i.instrument = :instrument) AND " +
-        "(:department IS NULL OR i.department = :department) AND " +
-        "(:riskCountry IS NULL OR i.riskCountry = :riskCountry) AND " +
-        "(:exchange IS NULL OR i.exchange = :exchange) AND " +
-        "(:tradeCCY IS NULL OR i.tradeCCY = :tradeCCY) AND " +
-        "(:settlementCCY IS NULL OR i.settlementCCY LIKE %:settlementCCY%)")
-List<Instrument> searchInstruments(
-        @Param("instrumentGroup") String instrumentGroup,
-        @Param("instrument") String instrument,
-        @Param("department") String department,
-        @Param("riskCountry") String riskCountry,
-        @Param("exchange") String exchange,
-        @Param("tradeCCY") String tradeCCY,
-        @Param("settlementCCY") String settlementCCY);
+    @Query("SELECT i FROM Instrument i WHERE " +
+            "(:instrumentGroup IS NULL OR i.instrumentGroup = :instrumentGroup) AND " +
+            "(:instrument IS NULL OR i.instrument = :instrument) AND " +
+            "(:department IS NULL OR i.department = :department) AND " +
+            "(:riskCountry IS NULL OR i.riskCountry = :riskCountry) AND " +
+            "(:exchange IS NULL OR i.exchange = :exchange) AND " +
+            "(:tradeCCY IS NULL OR i.tradeCCY = :tradeCCY) AND " +
+            "(:settlementCCY IS NULL OR i.settlementCCY LIKE %:settlementCCY%)")
+    List<Instrument> searchInstruments(
+            @Param("instrumentGroup") String instrumentGroup,
+            @Param("instrument") String instrument,
+            @Param("department") String department,
+            @Param("riskCountry") String riskCountry,
+            @Param("exchange") String exchange,
+            @Param("tradeCCY") String tradeCCY,
+            @Param("settlementCCY") String settlementCCY);
 
     List<Instrument> findByInstrumentGroup(String instrumentGroup);
+
+    List<Instrument> findByInstrumentIdIn(List<String> instrumentIds);
+
 }
