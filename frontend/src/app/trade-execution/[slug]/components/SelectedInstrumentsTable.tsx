@@ -9,6 +9,8 @@ import Paper from '@mui/material/Paper';
 import { Checkbox, FormGroup } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type formAction = (id: Number) => void;
 export default function SelectedInstrumentsTable(
@@ -51,7 +53,6 @@ export default function SelectedInstrumentsTable(
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="right">Selected</TableCell>
                         <TableCell align="right">Instrument Group</TableCell>
                         <TableCell align="right">Instrument</TableCell>
                         <TableCell align="right">Department</TableCell>
@@ -77,9 +78,23 @@ export default function SelectedInstrumentsTable(
                             <TableCell align="right">{row.TradeCCY}</TableCell>
                             <TableCell align="right">{row.SettlementCCY}</TableCell>
                             <TableCell align="right">
-                                <button onClick={() => toggleSellStates(row.Id)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }}>
+                                {/* <button onClick={() => toggleSellStates(row.Id)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }}>
                                     {sellStates[row.Id] ? 'Sell' : 'Buy'}
-                                </button>
+                                </button> */}
+
+                                <ToggleButtonGroup
+                                    value={sellStates[row.Id] ? 'sell' : 'buy'}
+                                    exclusive
+                                    aria-label="text alignment"
+                                    onChange={() => toggleSellStates(row.Id)}
+                                >
+                                    <ToggleButton value="buy" aria-label="left aligned">
+                                        Buy
+                                    </ToggleButton>
+                                    <ToggleButton value="sell" aria-label="centered">
+                                        Sell
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
                             </TableCell>
                             <TableCell align="right">
                                 <input onChange={(e) => updateLimitOrders(row.Id, e.target.value)} className="border" style={{ padding: '10px 20px', cursor: 'pointer' }} />

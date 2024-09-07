@@ -49,15 +49,15 @@ export default function Page({ params }: { params: { slug: string } }) {
             </div>
 
             <div className="w-full flex justify-end flex-row items-center">
-                <div className="flex flex-row left-0 align-right items-center h-min w-min px-8 py-4 bg-white border border-0.5 rounded-md m-10">
-                    <div className="flex flex-row w-min text-nowrap pr-10 text-s">Total Limit Order:</div>
+                <div className="flex flex-row left-0 align-right items-center h-min w-min px-6 py-4 bg-white border border-0.5 rounded-md m-10">
+                    <div className="flex flex-row w-min text-nowrap pr-7 text-s text-gray-700">Total Limit Order:</div>
                     <div>{totalCount}</div>
                 </div>
                 <Button text="Edit Instruments" link={`/market-analysis`} purpose={ButtonPurpose.Ready} />
             </div>
 
             <div className="flex flex-row justify-around w-full h-min">
-                <div className="flex bg-blue-100">
+                <div className="flex ">
                     <LimitTable rows={limitData} />
                 </div>
             </div>
