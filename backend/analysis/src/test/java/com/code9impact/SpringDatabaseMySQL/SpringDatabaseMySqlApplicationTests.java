@@ -1,10 +1,10 @@
-package com.code9impact.analysis;
+package com.code9impact.SpringDatabaseMySQL;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AnalysisApplicationTests {
+class SpringDatabaseMySqlApplicationTests {
 
 	@Test
 	void contextLoads() {
