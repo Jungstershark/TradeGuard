@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import TextSearch from "@/app/components/TextSearch";
 import InstrumentTable, { testData } from "@/app/market-analysis/components/InstrumentTable";
 import {Button} from "@mui/material";
+import { getAllInstruments } from "@/app/actions/analysis_execution";
 
 const initialFilters = {
     "Instrument Group" : "",
@@ -39,6 +40,33 @@ export default function Page() {
             setSelectedInstrumentIdList([...selectedInstrumentIdList, id])
         }
     };
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const data = await getAllInstruments(); // Call the async function
+
+                const rows: InstrumentData[] = data.data.map(item => { return (
+                {
+                    "Id": item['instrument_id'],
+                    "InstrumentGroup": item['instrument_group'],
+                    "Instrument": item['instrument'],
+                    "Department": item['department'],
+                    "RiskCountry": item['risk_country'],
+                    "Exchange": item['exchange'],
+                    "TradeCCY": item['tradeccy'],
+                    "SettlementCCY": item['settlementccy'],
+                })});
+
+                setInstrumentDataList(rows); // Update the state with the response data
+                console.log(data.data) // Update the state with the response data
+            } catch (error: any) {
+                console.log(error.message);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     return (
         <div className="flex flex-col p-10 w-full min-h-full">
