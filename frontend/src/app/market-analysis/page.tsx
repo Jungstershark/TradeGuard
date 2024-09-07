@@ -26,7 +26,7 @@ export default function Page() {
     }
 
     return (
-        <>
+        <div className="p-10 w-full min-h-full">
             <ul className="grid grid-cols-2 w-full h-1">
                 {Object.entries(filters).map((filter, idx) => {
                     const label: string = filter[0]
@@ -39,6 +39,6 @@ export default function Page() {
                     )
                 })}
             </ul>
-        </>
+        </div>
     )
 }
