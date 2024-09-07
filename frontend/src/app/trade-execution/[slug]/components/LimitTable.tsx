@@ -14,7 +14,6 @@ import { ButtonPurpose } from '@/app/utils/ButtonPurpose';
 interface LimitTableProps {
     rows: LimitData[];
 }
-type Order = 'asc' | 'desc';
 
 export default function LimitTable({ rows }: LimitTableProps) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
