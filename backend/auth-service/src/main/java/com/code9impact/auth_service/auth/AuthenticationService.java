@@ -56,5 +56,9 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
+    public void validateToken(String token) {
+        jwtService.validateToken(token);
+    }
 }
 

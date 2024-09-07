@@ -25,4 +25,15 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
+
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestParam("token") String token) {
+        try {
+            service.validateToken(token);
+            return ResponseEntity.ok("Token Valid");
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid Token");
+        }
+    }
 }
