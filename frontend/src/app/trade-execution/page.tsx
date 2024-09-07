@@ -1,21 +1,14 @@
-import LimitTable from "./components/LimitTable";
-import dummyData from "../utils/test";
+import Link from "next/link";
 export default function Page() {
+
     return (
-      <main className="flex min-h-screen w-full flex-col items-center p-10 bg-green-100">
-        <div className = "flex flex-row justify-around w-full h-1/6 bg-red-100">
-            <div className = "bg-blue-100">
-                instrument group search
+        <main className="flex min-h-screen w-full flex-col items-center p-10">
+            <div className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white`}>
+                <Link href="/market-analysis">
+                    Select Instrument to Trade
+                </Link>
             </div>
-            <div className = "bg-blue-100">
-                counterparty search
-            </div>
-        </div>
-        <div className = "flex flex-row justify-around w-full h-4/6 bg-red-100 mt-10">
-            <div className = "bg-blue-100">
-                <LimitTable rows = {dummyData} />
-            </div>
-        </div>
-      </main>
+        </main>
     );
-  }
+};
+
