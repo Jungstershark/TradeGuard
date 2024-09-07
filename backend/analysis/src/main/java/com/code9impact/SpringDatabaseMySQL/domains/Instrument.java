@@ -36,7 +36,7 @@ public class Instrument {
     private String tradeCCY;
 
     @Column(name = "settlementccy")
-    private String exchangeCCY;
+    private String settlementCCY;
 
 
 }
