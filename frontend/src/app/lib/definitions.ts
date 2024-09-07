@@ -1,12 +1,6 @@
-import { z } from 'zod'
- 
-export type FormState =
-  | {
-      errors?: {
-        name?: string[]
-        email?: string[]
-        password?: string[]
-      }
-      message?: string
-    }
-  | undefined
+export interface SessionPayload {
+  userId: string;
+  expiration: Date;
+  role: string;
+  [key: string]: any;  // Allow dynamic properties
+}

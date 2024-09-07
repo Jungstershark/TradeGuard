@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 type formAction = (formData: FormData) => Promise<{ errors?: any; success?: boolean; data?: any; }>;
 
-export function SignupForm({ formParams, onSubmit, submitButton }: { formParams: { [key: string]: string }; onSubmit: formAction; submitButton: String }) {
+export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: { [key: string]: string }; onSubmit: formAction; submitButton: String }) {
     // State for form input values
     const [formData, setFormData] = useState<{ [key: string]: string }>(formParams);
     console.log(formData);
