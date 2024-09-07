@@ -1,17 +1,17 @@
 'use client'
 
-import React, { useState } from 'react';
-import TextSearch from "@/app/components/TextSearch";
+import React, {useEffect, useState} from 'react';
 import { initialFilters } from "@/app/market-analysis/page";
+import {getUniqueParams} from "@/app/actions/analysis_execution";
 
-const dummyOptions = {
-    "Instrument Group": ["", "Equity", "Bond", "Derivative", "Commodity"],
-    "Instrument": ["", "Stock", "Bond", "Option", "Future", "ETF"],
-    "Department": ["", "Trading", "Risk Management", "Compliance", "Operations"],
-    "Risk Country": ["", "USA", "Germany", "China", "India", "Brazil"],
-    "Exchange": ["", "NYSE", "NASDAQ", "LSE", "TSE", "HKEX"],
-    "Trade Currency": ["", "USD", "EUR", "JPY", "GBP", "AUD"],
-    "Settlement Currency": ["", "USD", "EUR", "JPY", "GBP", "CHF"]
+const initialOptions = {
+    "Instrument Group": [""],
+    "Instrument": [""],
+    "Department": [""],
+    "Risk Country": [""],
+    "Exchange": [""],
+    "Trade Currency": [""],
+    "Settlement Currency": [""]
 };
 
 function TextForm({label, optionsList, selectedOption, onOptionSelected}:{label: string, optionsList: string[], selectedOption: string, onOptionSelected: any}) {
@@ -24,7 +24,7 @@ function TextForm({label, optionsList, selectedOption, onOptionSelected}:{label:
                 id="dropdown"
                 value={selectedOption}
                 onChange={onOptionSelected}
-                className="w-full border border-gray-300 rounded pl-2 py-2 focus:outline-none focus:ring-1 focus:ring-gic-blue"
+                className="w-full border border-gray-300 rounded pl-2 py-2.5 focus:outline-none focus:ring-1 focus:ring-gic-blue"
             >
                 {optionsList.map((option, index) => {
                     return <option key={index}>{option}</option>
@@ -36,15 +36,41 @@ function TextForm({label, optionsList, selectedOption, onOptionSelected}:{label:
 
 export default function Page() {
     const [formParams, setFormParams] = useState(initialFilters)
+    const [options, setOptions] = useState(initialOptions)
 
     function onOptionSelected(e, param) {
 
         const newFormParams = {...formParams}
         newFormParams[param] = e.target.value
 
-        // console.log(param, e.target.value, newFormParams)
         setFormParams(newFormParams)
     }
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const data = await getUniqueParams(); // Call the async function
+                const uniqueParams = data.data
+
+                const newOptions = {
+                    "Instrument Group": ["", ...uniqueParams['instrumentGroup']],
+                    "Instrument": ["", ...uniqueParams['instrument']],
+                    "Department": ["", ...uniqueParams['department']],
+                    "Risk Country": ["", ...uniqueParams['riskCountry']],
+                    "Exchange": ["", ...uniqueParams['exchange']],
+                    "Trade Currency": ["", ...uniqueParams['tradeCCY']],
+                    "Settlement Currency": ["", ...uniqueParams['settlementCCY']],
+                }
+
+                setOptions(newOptions); // Update the state with the response data
+                console.log(uniqueParams) // Update the state with the response data
+            } catch (error: any) {
+                console.log(error.message);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     return (
         <div className="flex flex-col p-10 w-full min-h-full">
@@ -55,11 +81,27 @@ export default function Page() {
 
                     return (
                         <li key={idx}>
-                            <TextForm label={param} optionsList={dummyOptions[param]} selectedOption={value} onOptionSelected={(e) => {onOptionSelected(e, param)}}/>
+                            <TextForm label={param} optionsList={options[param]} selectedOption={value}
+                                onOptionSelected={(e) => {
+                                    onOptionSelected(e, param)
+                                }}/>
                         </li>
                     )
                 })}
             </ul>
+            <div className="flex flex-row-reverse mt-10">
+                { !Object.values(formParams).includes("") ? <button
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                        // onClick={}
+                    >
+                        Submit for Approval
+                    </button> :
+                    <div
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] opacity-50 text-white`}>
+                        Submit for Approval
+                    </div>
+                }
+            </div>
         </div>
-)
+    )
 }
