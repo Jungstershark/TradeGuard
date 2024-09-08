@@ -85,8 +85,12 @@ export default function Page() {
 
     const router = useRouter();
     const goToTradeExecution = () => {
+        // console.log(`${selectedInstrumentIdList}`)
+        // console.log(instrumentDataList)
         const numUniqueInstrumentGroup = new Set(instrumentDataList
-            .filter(instrumentData => selectedInstrumentIdList.includes(instrumentData["instrumentId"]))
+            .filter(instrumentData =>
+                selectedInstrumentIdList.includes(instrumentData["Id"])
+            )
             .map(instrumentData => instrumentData["instrumentGroup"])).size
 
         if (numUniqueInstrumentGroup !== 1) {
