@@ -27,6 +27,8 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
     const [filters, setFilters] = useState(initialFilters)
 
     const [instrumentDataList, setInstrumentDataList] = useState([])
+    const [fullInstrumentDataList, setFullInstrumentDataList] = useState([])
+
     const [selectedInstrumentIdList, setSelectedInstrumentIdList] = useState([])
 
     const [token, setToken] = useState<string | null>(null);
@@ -114,11 +116,16 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
     const goToTradeExecution = () => {
         // console.log(`${selectedInstrumentIdList}`)
         // console.log(instrumentDataList)
-        const numUniqueInstrumentGroup = new Set(instrumentDataList
+        const numUniqueInstrumentGroup = new Set(fullInstrumentDataList
             .filter(instrumentData =>
                 selectedInstrumentIdList.includes(instrumentData["Id"])
             )
-            .map(instrumentData => instrumentData["instrumentGroup"])).size
+            .map(instrumentData => instrumentData["InstrumentGroup"])).size
+        // console.log(`filter ${fullInstrumentDataList
+        //     .filter(instrumentData =>
+        //         selectedInstrumentIdList.includes(instrumentData["Id"])
+        //     )}`)
+        // console.log(`numUniqueInstrumentGroup: ${numUniqueInstrumentGroup}`)
 
         if (numUniqueInstrumentGroup !== 1) {
             alert("Choose Instruments from only one Instrument Group")
@@ -152,6 +159,7 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
                     .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
 
                 setInstrumentDataList(rows); // Update the state with the response data
+                setFullInstrumentDataList(rows)
                 console.log(data.data) // Update the state with the response data
             } catch (error: any) {
                 console.log(error.message);
@@ -186,17 +194,27 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
                 />
             </div>
             <div className="flex flex-row justify-between">
-                <button
-                    className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
-                    onClick={goToApprovalForm}>
-                    Approval Form
-                </button>
+                <div className={"flex flex-row "}>
+                    <button
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer mr-5`}
+                        onClick={goToApprovalForm}>
+                        Approval Form
+                    </button>
+                    <button
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                        onClick={() => {
+                            setSelectedInstrumentIdList([])
+                            alert("Multiple Instruments submitted for verification")
+                        }}>
+                        Verify Instruments
+                    </button>
+                </div>
                 {selectedInstrumentIdList.length > 0
                     ? <button
-                    className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
-                    onClick={goToTradeExecution}>
-                    Trade Execution
-                </button> :
+                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                        onClick={goToTradeExecution}>
+                        Trade Execution
+                    </button> :
                     <div
                         className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] opacity-50 text-white`}>
                         Trade Execution
