@@ -1,30 +1,55 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import TextSearch from "@/app/components/TextSearch";
 import InstrumentTable, { testData } from "@/app/market-analysis/components/InstrumentTable";
-import {Button} from "@mui/material";
-import {getAllInstruments, getFilteredInstruments} from "@/app/actions/analysis_execution";
+import { Button } from "@mui/material";
+import { getAllInstruments, getFilteredInstruments } from "@/app/actions/analysis_execution";
 import * as React from "react";
 import FunctionButton from "@/app/components/FunctionButton";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getCookie } from '@/app/utils/CookieHelper';
+
 import {instrumentMapping} from "@/app/utils/instrumentMapping";
 
 export const initialFilters = {
-    "Instrument Group" : "",
-    "Instrument" : "",
-    "Department" : "",
+    "Instrument Group": "",
+    "Instrument": "",
+    "Department": "",
     "Risk Country": "",
     "Exchange": "",
     "Trade Currency": "",
-    "Settlement Currency" : ""
+    "Settlement Currency": ""
 }
 
-export default function Page() {
+export default function Page(req: NextApiRequest, res: NextApiResponse) {
     const [filters, setFilters] = useState(initialFilters)
 
     const [instrumentDataList, setInstrumentDataList] = useState([])
     const [selectedInstrumentIdList, setSelectedInstrumentIdList] = useState([])
+
+    const [token, setToken] = useState<string | null>(null);
+    const [department, setDepartment] = useState<string | null>(null);
+
+    useEffect(() => {
+        
+        // Retrieve the token and department from cookies
+        const retrievedToken = getCookie('token');
+        const retrievedDepartment = getCookie('department');
+
+        // console.log('Token:', retrievedToken);
+        // console.log('Department:', retrievedDepartment);
+
+        if (retrievedDepartment != null) {
+            const newFilters = {
+                ...filters,
+                ["Department"]: retrievedDepartment
+            }
+            setFilters(newFilters)
+        }
+        console.log(filters)
+    }, []);
 
     const handleChange = (e) => {
         const newFilters = {
@@ -63,17 +88,19 @@ export default function Page() {
         try {
             const data = await getFilteredInstruments(filters); // Call the async function
 
-            const rows: InstrumentData[] = data.data.map(item => { return (
-                {
-                    "Id": item['instrumentId'],
-                    "InstrumentGroup": item['instrumentGroup'],
-                    "Instrument": item['instrument'],
-                    "Department": item['department'],
-                    "RiskCountry": item['riskCountry'],
-                    "Exchange": item['exchange'],
-                    "TradeCCY": item['tradeCCY'],
-                    "SettlementCCY": item['settlementCCY'],
-                })})
+            const rows: InstrumentData[] = data.data.map(item => {
+                return (
+                    {
+                        "Id": item['instrumentId'],
+                        "InstrumentGroup": item['instrumentGroup'],
+                        "Instrument": item['instrument'],
+                        "Department": item['department'],
+                        "RiskCountry": item['riskCountry'],
+                        "Exchange": item['exchange'],
+                        "TradeCCY": item['tradeCCY'],
+                        "SettlementCCY": item['settlementCCY'],
+                    })
+            })
                 .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
 
             setInstrumentDataList(rows); // Update the state with the response data
@@ -101,7 +128,7 @@ export default function Page() {
     }
 
     const goToApprovalForm = () => {
-        router.push("/market-analysis/approval-form/" + JSON.stringify(filters) )
+        router.push("/market-analysis/approval-form/" + JSON.stringify(filters))
     }
 
     useEffect(() => {
@@ -109,18 +136,20 @@ export default function Page() {
             try {
                 const data = await getAllInstruments(); // Call the async function
 
-                const rows: InstrumentData[] = data.data.map(item => { return (
-                {
-                    "Id": item['instrumentId'],
-                    "InstrumentGroup": item['instrumentGroup'],
-                    "Instrument": item['instrument'],
-                    "Department": item['department'],
-                    "RiskCountry": item['riskCountry'],
-                    "Exchange": item['exchange'],
-                    "TradeCCY": item['tradeCCY'],
-                    "SettlementCCY": item['settlementCCY'],
-                })})
-                .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
+                const rows: InstrumentData[] = data.data.map(item => {
+                    return (
+                        {
+                            "Id": item['instrumentId'],
+                            "InstrumentGroup": item['instrumentGroup'],
+                            "Instrument": item['instrument'],
+                            "Department": item['department'],
+                            "RiskCountry": item['riskCountry'],
+                            "Exchange": item['exchange'],
+                            "TradeCCY": item['tradeCCY'],
+                            "SettlementCCY": item['settlementCCY'],
+                        })
+                })
+                    .sort((a, b) => selectedInstrumentIdList.includes(b["Id"]) - selectedInstrumentIdList.includes(a["Id"]));
 
                 setInstrumentDataList(rows); // Update the state with the response data
                 console.log(data.data) // Update the state with the response data
@@ -141,7 +170,7 @@ export default function Page() {
 
                     return (
                         <li key={idx}>
-                            <TextSearch label={label} text={input} handleChange={(label === "Instrument") ? handleInstrumentChange : handleChange}/>
+                            <TextSearch label={label} text={input} handleChange={(label === "Instrument") ? handleInstrumentChange : handleChange} />
                         </li>
                     )
                 })}
@@ -164,10 +193,10 @@ export default function Page() {
                 </button>
                 {selectedInstrumentIdList.length > 0
                     ? <button
-                        className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
-                        onClick={goToTradeExecution}>
-                        Trade Execution
-                    </button> :
+                    className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] text-white cursor-pointer`}
+                    onClick={goToTradeExecution}>
+                    Trade Execution
+                </button> :
                     <div
                         className={`w-36 md:w-64 h-max text-center py-2 md:py-4 px-4 rounded rounded-xl shadow-[2px_5px_5px_1px_rgba(0,0,0,0.1)] bg-[#0e234e] opacity-50 text-white`}>
                         Trade Execution
