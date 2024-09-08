@@ -10,7 +10,9 @@ import { json } from "stream/consumers";
 import { ButtonPurpose } from "@/app/utils/ButtonPurpose";
 import { timeStamp } from "console";
 
-export default function Page({ params }: { params: { slug: string } }) {
+function Page({ params }: { params: { slug: string } }) {
+    
+    
     if (!params) {
         return <div>Loading...</div>;
     }
@@ -138,3 +140,5 @@ export default function Page({ params }: { params: { slug: string } }) {
         </main>
     );
 }
+
+export default (Page);
