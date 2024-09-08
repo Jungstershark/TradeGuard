@@ -41,7 +41,7 @@ export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: {
             ...formData,
             [e.target.name]: e.target.value,
         });
-        // console.log(formData);
+        console.log(formData);
     };
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setFormData({
@@ -93,7 +93,6 @@ export function AuthForm({ formParams, onSubmit, submitButton }: { formParams: {
                             id={key}
                             name={key}
                             placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
-                            value={formData[key]}
                             onChange={handleChange}
                             className="mt-1 p-2 block w-full border border-gray-300 rounded-md text-black"
                         />}

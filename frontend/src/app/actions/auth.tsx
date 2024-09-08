@@ -1,5 +1,5 @@
 'use client'
-import { EXECUTION_API_PREFIX } from '../constants';
+import { AUTH_API_PREFIX } from '../constants';
 
 export async function signup(formData: FormData) {
     // Validate form fields
@@ -13,7 +13,7 @@ export async function signup(formData: FormData) {
 
     try {
         // Make a POST request to the signup API endpoint
-        const response = await fetch(`${EXECUTION_API_PREFIX}/auth/register`, {
+        const response = await fetch(`${AUTH_API_PREFIX}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function login(formData: { [key: string]: string }) {
 
     try {
         console.log(JSON.stringify(payload));
-        const response = await fetch(`${EXECUTION_API_PREFIX}/auth/authenticate`, {
+        const response = await fetch(`${AUTH_API_PREFIX}/auth/authenticate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
