@@ -186,7 +186,7 @@ export default function Page(req: NextApiRequest, res: NextApiResponse) {
             <Button onClick={onSearchClick}>
                 Search
             </Button>
-            <div style={{ height: 240, marginBottom: "20px" }} className="flex mt-10 h-80 border border-gray-300 rounded">
+            <div style={{ height: 500, marginBottom: "20px" }} className="flex mt-10 h-80 border border-gray-300 rounded">
                 <InstrumentTable
                     instrumentDataList={instrumentDataList}
                     selectedInstrumentIdList={selectedInstrumentIdList}

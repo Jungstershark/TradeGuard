@@ -36,14 +36,14 @@ export default function Sidebar() {
                     {pathname !== "/trade-execution" && <AiOutlineCloud style={{ fontSize: '24px' }} />}
                     <text className="pl-2">Execution</text>
                 </Link>
-                <Link
+                {/* <Link
                     href="/test-stream"
                     className={"p-2 rounded text-white font-medium flex flex-row " + (pathname === "/test-stream" ? "bg-black bg-opacity-40" : "hover:bg-black hover:bg-opacity-20")}
                 >
                     {pathname === "/trade-execution" && <AiFillCloud style={{ fontSize: '24px' }} />}
                     {pathname !== "/trade-execution" && <AiOutlineCloud style={{ fontSize: '24px' }} />}
                     <text className="pl-2">Test Stream</text>
-                </Link>
+                </Link> */}
             </nav>
         </div>
     )
